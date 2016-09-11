@@ -71,6 +71,11 @@ public class LocalLoader implements ResourceLoader {
             resourceURL = getClasspathResourceURL(path.replaceFirst("^classpath:", ""));
         }
 
+        // If the file is not resolved yet try to guess its location
+        if (resourceURL == null) {
+            resourceURL = resolveLocally(path);
+        }
+
         // Set the resolved resource if any
         result.setResURL(resourceURL);
         result.setResolved(resourceURL!=null);
@@ -88,7 +93,6 @@ public class LocalLoader implements ResourceLoader {
     private URL getFileURL(String resourcePath) {
         URL resourceURL = null;
         if (resourcePath != null) {
-
             Path path = fileSystem.getPath(resourcePath);
 
             if (Files.exists(path)) {
@@ -114,6 +118,18 @@ public class LocalLoader implements ResourceLoader {
         if (resourceURL == null) {
             resourceURL = ClassLoader.getSystemResource(resourcePath);
         }
+        return resourceURL;
+    }
+
+    /**
+     * Try to resolve the file on the local file system
+     * or classpath
+     * @param resourcePath the path to the resource
+     * @return the URl if the file is resolved, null otherwise
+     */
+    private URL resolveLocally(String resourcePath) {
+        URL resourceURL = getFileURL(resourcePath);
+        resourceURL = (resourceURL == null) ? getClasspathResourceURL(resourcePath) : resourceURL;
         return resourceURL;
     }
 

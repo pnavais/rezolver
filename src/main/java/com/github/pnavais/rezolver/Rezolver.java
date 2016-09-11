@@ -67,7 +67,7 @@ public class Rezolver
     private LoadersChain loadersChain;
 
     /** The default loaders */
-    private static List<ResourceLoader> defaultLoaders = Arrays.asList(new LocalLoader(), new RemoteLoader());
+    private static List<ResourceLoader> defaultLoaders = new ArrayList<>(Arrays.asList(new LocalLoader(), new RemoteLoader()));
 
     /**
      * This class uses a builder pattern,
@@ -109,7 +109,7 @@ public class Rezolver
          * @param loader the loader to add
          * @return the builder
          */
-        public RezolverBuilder andLoader(ResourceLoader loader) {
+        public RezolverBuilder withLoader(ResourceLoader loader) {
             requireNonNull(loader);
             instance.loadersChain.add(loader);
             return this;

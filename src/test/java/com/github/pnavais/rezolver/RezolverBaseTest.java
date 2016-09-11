@@ -16,13 +16,17 @@
 
 package com.github.pnavais.rezolver;
 
-import com.github.pnavais.rezolver.utils.StaticLoader;
+import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * Base class for the Rezolver tests. Initializes
@@ -31,17 +35,20 @@ import java.nio.file.FileSystem;
 public class RezolverBaseTest {
 
     /** The testing in-memory file system */
-    private static FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
+    protected static FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
 
     @BeforeClass
-    public static void setup() {
-        StaticLoader.runOnce(() -> {
-            //fileSystem.getPath()
-            try {
-                fileSystem.getPath("/tmp/test.nfo").toFile().createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+    public static void setup() throws IOException {
+        Path tmp = fileSystem.getPath("/tmp/");
+        Files.createDirectory(tmp);
+        Path testFile = tmp.resolve("fs_resource.nfo"); // /tmp/resource.nfo
+        Files.write(testFile, ImmutableList.of("Test resource physical"), StandardCharsets.UTF_8);
     }
+
+    @AfterClass
+    public static void tearDown() throws IOException {
+        Path testFile = fileSystem.getPath("/tmp/fs_resource.nfo");
+        Files.delete(testFile);
+    }
+
 }
