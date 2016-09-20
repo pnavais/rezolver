@@ -14,4 +14,6 @@
 </p>
 
 <p align="center"><sup><strong>Simple resource locator for Java 8</strong></sup></p>
-<hr>
+---
+
+
