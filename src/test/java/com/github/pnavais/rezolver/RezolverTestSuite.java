@@ -23,6 +23,6 @@ import org.junit.runners.Suite;
  * Rezolver JUnit test suite
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ RezolverTest.class })
+@Suite.SuiteClasses({ RezolverLocalTest.class })
 public class RezolverTestSuite {
 }

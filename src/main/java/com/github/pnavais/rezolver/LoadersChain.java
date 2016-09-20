@@ -32,7 +32,7 @@ public class LoadersChain {
     /**
      * The Loaders chain.
      */
-    Collection<ResourceLoader> loadersChain;
+    private Collection<ResourceLoader> loadersChain;
 
     /**
      * Instantiates a new Loaders chain.

@@ -18,6 +18,10 @@ package com.github.pnavais.rezolver.loader;
 
 import com.github.pnavais.rezolver.Context;
 
+import java.net.URL;
+
+import static java.util.Objects.requireNonNull;
+
 /**
  * <b>RemoteLoader</b>
  * <p>
@@ -40,6 +44,15 @@ public class RemoteLoader implements ResourceLoader {
      * @return the resolved URL or null if not resolved.
      */
     public Context resolve(String path, Context context) {
-        return null;
+        requireNonNull(path);
+        URL resourceURL = null;
+        Context result = (context != null) ? context : new Context();
+
+        // Set the resolved resource if any
+        result.setResURL(resourceURL);
+        result.setResolved(resourceURL!=null);
+        result.setSourceEntity(getClass().getSimpleName());
+
+        return result;
     }
 }

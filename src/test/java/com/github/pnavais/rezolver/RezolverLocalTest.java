@@ -94,12 +94,12 @@ public class RezolverLocalTest extends RezolverBaseTest {
     @Test
     public void contextCheckResolvedTest() {
         Rezolver rezolver = Rezolver.newBuilder().withLoader(localLoader).build();
-        Context ctx2 = rezolver.lookupCtx("/tmp/fs_resource.nfo");
-        assertNotNull("Error retrieving the resolution context", ctx2);
-        assertNotNull("Resource resolution mismatch.Wrong URL", ctx2.getResURL());
-        assertTrue("Resource resolution status error", ctx2.isResolved());
-        assertNotNull(ctx2.getSourceEntity());
-        assertEquals("Error retrieving the resolution source", LocalLoader.class.getSimpleName(), ctx2.getSourceEntity());
+        Context ctx = rezolver.lookupCtx("/tmp/fs_resource.nfo");
+        assertNotNull("Error retrieving the resolution context", ctx);
+        assertNotNull("Resource resolution mismatch.Wrong URL", ctx.getResURL());
+        assertTrue("Resource resolution status error", ctx.isResolved());
+        assertNotNull(ctx.getSourceEntity());
+        assertEquals("Error retrieving the resolution source", LocalLoader.class.getSimpleName(), ctx.getSourceEntity());
     }
 
     @Test

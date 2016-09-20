@@ -32,6 +32,9 @@ public class Context {
     /** The resource's resolved URL */
     private URL resURL;
 
+    /** The source entity that resolved the resource */
+    private String sourceEntity;
+
     /** A map to store any arbitrary information needed during resolution */
     private WeakHashMap<String, Object> map;
 
@@ -62,6 +65,15 @@ public class Context {
     }
 
     /**
+     * Sets the resolution source
+     *
+     * @param source the source entity
+     */
+    public void setSourceEntity(String source) {
+        this.sourceEntity = source;
+    }
+
+    /**
      * Retrieves the resource's resolved
      * URL or null if not resolved.
      *
@@ -78,6 +90,18 @@ public class Context {
      */
     public void setResURL(URL resURL) {
         this.resURL = resURL;
+    }
+
+    /**
+     * Retrieves the last source entity
+     * that processed a resource location.
+     * This entity may or not be the one
+     * who resolved the source.
+     *
+     * @return the source entity
+     */
+    public String getSourceEntity() {
+        return sourceEntity;
     }
 
     /**
@@ -102,4 +126,12 @@ public class Context {
         return this.map.get(key);
     }
 
+    /**
+     * Resets the context values
+     */
+    public void clear() {
+        this.map.clear();
+        isResolved = false;
+        sourceEntity = null;
+    }
 }

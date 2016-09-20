@@ -41,7 +41,7 @@ public class RezolverBaseTest {
     public static void setup() throws IOException {
         Path tmp = fileSystem.getPath("/tmp/");
         Files.createDirectory(tmp);
-        Path testFile = tmp.resolve("fs_resource.nfo"); // /tmp/resource.nfo
+        Path testFile = tmp.resolve("fs_resource.nfo"); // /tmp/fs_resource.nfo
         Files.write(testFile, ImmutableList.of("Test resource physical"), StandardCharsets.UTF_8);
     }
 

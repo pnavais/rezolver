@@ -44,10 +44,23 @@ public class LocalLoader implements ResourceLoader {
     /** The classloader for classpath lookup */
     private ClassLoader classLoader;
 
+    /** The path where the application is running */
+    private String runningPath;
+
     /**
-     * Private constructor to avoid external instantiation
+     * Constructor with default application path
      */
     public LocalLoader() {
+        this(ResourceLoader.getRunningPath());
+    }
+
+    /**
+     * Constructor with custom application path.
+     *
+     * @param appPath the path to the running application
+     */
+    public LocalLoader(String appPath) {
+        runningPath = appPath;
         fileSystem  = FileSystems.getDefault();
         classLoader = getClass().getClassLoader();
     }
@@ -66,19 +79,20 @@ public class LocalLoader implements ResourceLoader {
 
         // Try to resolve it using the schema prefix
         if (path.startsWith("file:")) {
-            resourceURL = getFileURL(path.replaceFirst("^file:", ""));
+            resourceURL = getFileURL(path.replaceFirst("^[^:]+:", ""));
         } else if (path.startsWith("classpath:")) {
-            resourceURL = getClasspathResourceURL(path.replaceFirst("^classpath:", ""));
+            resourceURL = getClasspathResourceURL(path.replaceFirst("^[^:]+:", ""));
         }
 
         // If the file is not resolved yet try to guess its location
         if (resourceURL == null) {
-            resourceURL = resolveLocally(path);
+            resourceURL = resolveLocally(path, context);
         }
 
         // Set the resolved resource if any
         result.setResURL(resourceURL);
         result.setResolved(resourceURL!=null);
+        result.setSourceEntity(getClass().getSimpleName());
 
         return result;
     }
@@ -94,7 +108,6 @@ public class LocalLoader implements ResourceLoader {
         URL resourceURL = null;
         if (resourcePath != null) {
             Path path = fileSystem.getPath(resourcePath);
-
             if (Files.exists(path)) {
                 try {
                     resourceURL = path.toUri().toURL();
@@ -123,11 +136,31 @@ public class LocalLoader implements ResourceLoader {
 
     /**
      * Try to resolve the file on the local file system
-     * or classpath
+     * or classpath using the default path if supplied
+     * in the context.
+     *
+     * @param resourcePath the path to the resource
+     * @param context      the context
+     * @return the URl if the file is resolved, null otherwise
+     */
+    private URL resolveLocally(String resourcePath, Context context) {
+        URL resourceURL = resolvePath(resourcePath);
+        // Last resort, try to resolve it using tha app's path
+        if (resourceURL == null) {
+            if ((runningPath != null) && (!resourcePath.startsWith(runningPath))) {
+                resourceURL = getFileURL(runningPath + fileSystem.getSeparator() + resourcePath.replaceFirst("^file:", ""));
+            }
+        }
+        return resourceURL;
+    }
+
+    /**
+     * Try to resolve the file on the local file system
+     * or classpath.
      * @param resourcePath the path to the resource
      * @return the URl if the file is resolved, null otherwise
      */
-    private URL resolveLocally(String resourcePath) {
+    private URL resolvePath(String resourcePath) {
         URL resourceURL = getFileURL(resourcePath);
         resourceURL = (resourceURL == null) ? getClasspathResourceURL(resourcePath) : resourceURL;
         return resourceURL;

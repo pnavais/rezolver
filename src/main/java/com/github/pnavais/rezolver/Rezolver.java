@@ -57,17 +57,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class Rezolver
 {
-    /** The path to the running application */
-    private String appPath;
-
     /** Holds any arbitrary data obtained during resolution */
     private Context context;
 
     /** The chain of loaders */
     private LoadersChain loadersChain;
 
-    /** The default loaders */
-    private static List<ResourceLoader> defaultLoaders = new ArrayList<>(Arrays.asList(new LocalLoader(), new RemoteLoader()));
+    /** The default loaders chain */
+    private static LoadersChain defaultChain = new LoadersChain(new ArrayList<>(Arrays.asList(new LocalLoader(), new RemoteLoader())));
 
     /**
      * This class uses a builder pattern,
@@ -75,7 +72,7 @@ public class Rezolver
      * from client code.
      */
     private Rezolver() {
-        this.loadersChain = new LoadersChain(defaultLoaders);
+        this.loadersChain = defaultChain;
         this.context = new Context();
     }
 
@@ -87,12 +84,27 @@ public class Rezolver
     }
 
     /**
-     * Retrieves the default instance
+     * Resolves the resource using the default
+     * rezolver instance. This method is not
+     * thread-safe with regards to the context.
      *
-     * @return the default instance
+     * @param resourcePath the path to the resource
+     * @return the resolved URL
      */
     public static URL resolve(String resourcePath) {
         return RezolverHolder.instance.lookup(resourcePath);
+    }
+
+    /**
+     * Resolves the resource using the default
+     * rezolver instance. This method is not
+     * thread-safe with regards to the context.
+     *
+     * @param resourcePath the path to the resource
+     * @return the resolved context
+     */
+    public static Context resolveCtx(String resourcePath) {
+        return RezolverHolder.instance.lookupCtx(resourcePath);
     }
 
     /**
@@ -111,6 +123,7 @@ public class Rezolver
          */
         public RezolverBuilder withLoader(ResourceLoader loader) {
             requireNonNull(loader);
+            instance.loadersChain = new LoadersChain();
             instance.loadersChain.add(loader);
             return this;
         }
@@ -124,18 +137,6 @@ public class Rezolver
         public RezolverBuilder withLoaders(Collection<ResourceLoader> loaders) {
             requireNonNull(loaders);
             instance.loadersChain = new LoadersChain(loaders);
-            return this;
-        }
-
-        /**
-         * Sets the running application path in case we want
-         * to resolve resources against a predefined path.
-         *
-         * @param appPath the application running path
-         * @return the builder
-         */
-        public RezolverBuilder withPath(String appPath) {
-            instance.appPath = appPath;
             return this;
         }
 
@@ -172,15 +173,34 @@ public class Rezolver
      * @return the resolved URL or null if not resolved
      */
     public URL lookup(String resourcePath) {
+        Context c = lookupCtx(resourcePath);
+        return (c != null) ? c.getResURL() : null;
+    }
 
+    /**
+     * Retrieve the URL for a given resourcePath
+     * using the resolver chain.
+     *
+     * Examples of possible resource paths :<code><ul>
+     *  <li>"/home/pnavais/myfile.nfo"</li>
+     *  <li>"file:///C:/Users/pnavais/test/image.png"</li>
+     *  <li>"classpath:/META-INF/resource.xml"</li>
+     *  <li>"https://github.com/pnavais/rezolver/"</li>
+     *  </ul>
+     *  </code>
+     *
+     * @param resourcePath the path to a resource
+     * @return the resolved URL or null if not resolved
+     */
+    public Context lookupCtx(String resourcePath) {
         Optional.ofNullable(this.loadersChain).ifPresent(loaders -> {
             loaders.getLoadersChain().stream().filter(l -> {
-                Context c = l.resolve(resourcePath, context);
-                return ((c!=null) && c.isResolved());
+                context = l.resolve(resourcePath, context);
+                return ((context != null) && context.isResolved());
             }).findFirst();
         });
 
-        return context.getResURL();
+        return context;
     }
 
     /**
