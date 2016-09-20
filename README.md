@@ -1,4 +1,8 @@
-# Rezolver
+<p align="center">
+    <img src="logo.svg"
+         height="130">
+</p>
+         
 <p align="center"><sup><strong>Simple resource locator for Java 8</strong></sup></p>
 
 <p align="center">
