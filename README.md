@@ -1,6 +1,5 @@
 <p align="center">
-    <img src="logo.svg"
-         height="130">
+    <img src="logo.png">
 </p>
          
 <p align="center"><sup><strong>Simple resource locator for Java 8</strong></sup></p>
