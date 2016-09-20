@@ -17,23 +17,20 @@
 package com.github.pnavais.rezolver;
 
 import com.github.pnavais.rezolver.loader.LocalLoader;
-import com.google.common.io.Files;
+import com.github.pnavais.rezolver.loader.RemoteLoader;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.*;
-import java.net.URISyntaxException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.fail;
+import static junit.framework.TestCase.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -41,7 +38,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Rezolver JUnit tests
  */
-public class RezolverTest extends RezolverBaseTest {
+public class RezolverLocalTest extends RezolverBaseTest {
 
     /** A custom local loader with in-memory filesystem */
     private static LocalLoader localLoader;
@@ -63,25 +60,46 @@ public class RezolverTest extends RezolverBaseTest {
     }
 
     @Test
+    public void nonExistingResourceTest() {
+        URL fRes = Rezolver.resolve("/tmp/fs_resource.nfo");
+        assertNull("Error resolving resource", fRes);
+    }
+
+    @Test
     public void fileSystemResourceTest() {
-        URL fRes = Rezolver.newBuilder().withLoader(localLoader).build().lookup("/tmp/fs_resource.nfo");
+        Rezolver r = Rezolver.newBuilder().withLoader(localLoader).build();
+        URL fRes = r.lookup("/tmp/fs_resource.nfo");
         assertNotNull("Error resolving resource from classpath", fRes);
-        System.out.println("TEMA >> "+fRes);
+
         try (InputStream inStream = fRes.openStream()) {
             BufferedReader in = new BufferedReader(new InputStreamReader(inStream));
-            List<String> lines = in.lines().collect(Collectors.toList());
-            System.out.println("LINES >> "+lines.get(0));
+            List<String> contents = in.lines().collect(Collectors.toList());
+            assertEquals(contents, Collections.singletonList("Test resource physical"));
         } catch (IOException e) {
-            e.printStackTrace();
+            fail("Error reading lines from file");
         }
+    }
 
-        //List<String> contents = Files.readLines(f, StandardCharsets.UTF_8);
-            //assertEquals(contents, Arrays.asList("Test resource physical"));
-        //} catch (URISyntaxException e) {
-//            fail("Error loading resource from file system");
-//        } catch (IOException e) {
-//            fail("Error reading lines from file");
-//        }
+    @Test
+    public void contextCheckUnresolvedTest() {
+        Context ctx = Rezolver.resolveCtx("/tmp/fs_resource.nfo");
+        assertNotNull("Error retrieving the resolution context", ctx);
+        assertNull("Resource resolution mismatch.Wrong URL", ctx.getResURL());
+        assertFalse("Resource resolution status error", ctx.isResolved());
+        assertNotNull(ctx.getSourceEntity());
+        assertEquals("Error retrieving the resolution source", RemoteLoader.class.getSimpleName(), ctx.getSourceEntity());
+
+    }
+
+    @Test
+    public void contextCheckResolvedTest() {
+        Rezolver rezolver = Rezolver.newBuilder().withLoader(localLoader).build();
+        Context ctx2 = rezolver.lookupCtx("/tmp/fs_resource.nfo");
+        assertNotNull("Error retrieving the resolution context", ctx2);
+        assertNotNull("Resource resolution mismatch.Wrong URL", ctx2.getResURL());
+        assertTrue("Resource resolution status error", ctx2.isResolved());
+        assertNotNull(ctx2.getSourceEntity());
+        assertEquals("Error retrieving the resolution source", LocalLoader.class.getSimpleName(), ctx2.getSourceEntity());
     }
 
     @Test
