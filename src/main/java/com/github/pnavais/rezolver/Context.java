@@ -17,6 +17,7 @@
 package com.github.pnavais.rezolver;
 
 import java.net.URL;
+import java.util.Map;
 import java.util.WeakHashMap;
 
 /**
@@ -133,5 +134,15 @@ public class Context {
         this.map.clear();
         isResolved = false;
         sourceEntity = null;
+    }
+
+    /**
+     * Retrieves the data collected during
+     * resolution.
+     *
+     * @return the data map
+     */
+    public Map<String, Object> getData() {
+        return map;
     }
 }

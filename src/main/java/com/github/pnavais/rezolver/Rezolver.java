@@ -17,16 +17,16 @@
 package com.github.pnavais.rezolver;
 
 
-import com.github.pnavais.rezolver.loader.ClasspathLoader;
-import com.github.pnavais.rezolver.loader.FileLoader;
-import com.github.pnavais.rezolver.loader.IResourceLoader;
-import com.github.pnavais.rezolver.loader.RemoteLoader;
+import com.github.pnavais.rezolver.loader.*;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
@@ -134,6 +134,27 @@ public class Rezolver
         }
 
         /**
+         * Sets a new loader through a functional interface.
+         *
+         * @param rFunction the functional interface
+         * @return the builder
+         */
+        public RezolverBuilder withLoader(BiFunction<String, Context, Context> rFunction) {
+            return withLoader(LoaderBuilder.with(rFunction));
+        }
+
+        /**
+         * Sets a new loader through a functional interface with both resolver
+         * and fallback functions.
+         *
+         * @param rFunction the functional interface
+         * @return the builder
+         */
+        public RezolverBuilder withLoader(BiFunction<String, Context, Context> rFunction, Function<String, URL> fbFunction, Consumer<String> fbSetter) {
+            return withLoader(LoaderBuilder.with(rFunction,fbFunction, fbSetter));
+        }
+
+        /**
          * Starts the loader chain with the given
          * loader using for it the given fallback path
          *
@@ -171,6 +192,27 @@ public class Rezolver
             requireNonNull(loader);
             loader.setFallbackPath(fallbackPath);
             return andLoader(loader);
+        }
+
+        /**
+         * Adds a new loader through a functional interface.
+         *
+         * @param rFunction the functional interface
+         * @return the builder
+         */
+        public RezolverBuilder andLoader(BiFunction<String, Context, Context> rFunction) {
+            return andLoader(LoaderBuilder.with(rFunction));
+        }
+
+        /**
+         * Adds a new loader through a functional interface with both resolver
+         * and fallback functions.
+         *
+         * @param rFunction the functional interface
+         * @return the builder
+         */
+        public RezolverBuilder andLoader(BiFunction<String, Context, Context> rFunction, Function<String, URL> fbFunction, Consumer<String> fbSetter) {
+            return andLoader(LoaderBuilder.with(rFunction,fbFunction, fbSetter));
         }
 
         /**

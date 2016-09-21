@@ -16,10 +16,17 @@
 
 package com.github.pnavais.rezolver;
 
+import com.github.pnavais.rezolver.loader.AbstractLoader;
 import com.github.pnavais.rezolver.loader.FileLoader;
+import com.github.pnavais.rezolver.loader.IResourceLoader;
 import com.github.pnavais.rezolver.loader.RemoteLoader;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static junit.framework.TestCase.*;
 import static org.junit.Assert.assertEquals;
@@ -61,4 +68,36 @@ public class RezolverContextTest extends RezolverBaseTest {
         assertEquals("Error retrieving the resolution source", FileLoader.class.getSimpleName(), ctx.getSourceEntity());
     }
 
+    @Test
+    public void contextIncrementalBuildTest() {
+
+        Rezolver rezolver = Rezolver.newBuilder().withLoader((s, context) -> {
+            context.setProperty("key_loader_1", "l1");
+            return context;
+        }).andLoader(LoaderBuilder.with((s, context) -> {
+            context.setProperty("key_loader_2", "l2");
+            return context;
+        })).andLoader((s, context) -> {
+            context.setProperty("key_loader_3", "l3");
+            return context;
+        }).andLoader((s, context) -> {
+            context.setProperty("key_loader_4", "l4");
+            return context;
+        }, s -> null, s -> {}).build();
+
+        Context ctx = rezolver.lookupCtx("dummy");
+        assertNotNull("Error retrieving the context", ctx);
+        assertFalse("Error during resolution", ctx.isResolved());
+        Map<String, Object> data = ctx.getData();
+        assertNotNull("Error collecting resolution data", ctx);
+
+        Map<String, Object> expectedData = new HashMap<>();
+        expectedData.put("key_loader_1", "l1");
+        expectedData.put("key_loader_2", "l2");
+        expectedData.put("key_loader_3", "l3");
+        expectedData.put("key_loader_4", "l4");
+        assertEquals("Retrieved resolution data mismatch",expectedData, data);
+    }
+
 }
+

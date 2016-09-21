@@ -69,11 +69,11 @@ public class FileLoader extends AbstractLoader {
                 if (Files.exists(path)) {
                     try {
                         resourceURL = path.toUri().toURL();
-                    } catch (MalformedURLException ignored) {
+                    } catch (MalformedURLException e) {
                     }
                 }
             }
-        } catch (InvalidPathException ignored) {
+        } catch (InvalidPathException e) {
         }
 
         return resourceURL;
