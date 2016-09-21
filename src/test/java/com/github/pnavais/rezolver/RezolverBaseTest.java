@@ -27,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.IntStream;
 
 /**
  * Base class for the Rezolver tests. Initializes
@@ -34,21 +35,64 @@ import java.nio.file.Path;
  */
 public class RezolverBaseTest {
 
-    /** The testing in-memory file system */
+    /**
+     * The testing in-memory file system
+     */
     protected static FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
 
+    /**
+     * The maximum number of test files
+     */
+    protected static int MAX_TEST_FILES = 10;
+
     @BeforeClass
-    public static void setup() throws IOException {
+    public static void setup() {
         Path tmp = fileSystem.getPath("/tmp/");
-        Files.createDirectory(tmp);
-        Path testFile = tmp.resolve("fs_resource.nfo"); // /tmp/fs_resource.nfo
-        Files.write(testFile, ImmutableList.of("Test resource physical"), StandardCharsets.UTF_8);
+        try {
+            Files.createDirectory(tmp);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        IntStream.range(0, MAX_TEST_FILES).parallel().forEach(i -> writeTestFile(tmp, "fs_resource_" + i + ".nfo"));
+    }
+
+    /**
+     * Creates a dummy test file in the given directory.
+     *
+     * @param dir      the target directory
+     * @param fileName the file to create
+     */
+    private static void writeTestFile(Path dir, String fileName) {
+        Path testFile = dir.resolve(fileName);
+        try {
+            Files.write(testFile, ImmutableList.of("Dummy Data"), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @AfterClass
-    public static void tearDown() throws IOException {
-        Path testFile = fileSystem.getPath("/tmp/fs_resource.nfo");
-        Files.delete(testFile);
+    public static void tearDown() {
+        IntStream.range(0, MAX_TEST_FILES).parallel().forEach(i -> deleteTestFile("/tmp/fs_resource_" + i + ".nfo"));
+        try {
+            Files.deleteIfExists(fileSystem.getPath("/tmp/"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Deletes a file
+     *
+     * @param fileName the file to remove
+     */
+    private static void deleteTestFile(String fileName) {
+        Path testFile = fileSystem.getPath(fileName);
+        try {
+            Files.delete(testFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
