@@ -17,12 +17,16 @@
 package com.github.pnavais.rezolver;
 
 
-import com.github.pnavais.rezolver.loader.LocalLoader;
+import com.github.pnavais.rezolver.loader.ClasspathLoader;
+import com.github.pnavais.rezolver.loader.FileLoader;
+import com.github.pnavais.rezolver.loader.IResourceLoader;
 import com.github.pnavais.rezolver.loader.RemoteLoader;
-import com.github.pnavais.rezolver.loader.ResourceLoader;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -64,7 +68,7 @@ public class Rezolver
     private LoadersChain loadersChain;
 
     /** The default loaders chain */
-    private static LoadersChain defaultChain = new LoadersChain(new ArrayList<>(Arrays.asList(new LocalLoader(), new RemoteLoader())));
+    private static LoadersChain defaultChain = new LoadersChain(new ArrayList<>(Arrays.asList(new FileLoader(), new ClasspathLoader(), new RemoteLoader())));
 
     /**
      * This class uses a builder pattern,
@@ -116,14 +120,27 @@ public class Rezolver
         private Rezolver instance = new Rezolver();
 
         /**
+         * Starts the loader chain with the given
+         * loader.
+         *
+         * @param loader the loader to add
+         * @return the builder
+         */
+        public RezolverBuilder withLoader(IResourceLoader loader) {
+            requireNonNull(loader);
+            instance.loadersChain = new LoadersChain();
+            instance.loadersChain.add(loader);
+            return this;
+        }
+
+        /**
          * Adds a new loader to the chain
          *
          * @param loader the loader to add
          * @return the builder
          */
-        public RezolverBuilder withLoader(ResourceLoader loader) {
+        public RezolverBuilder andLoader(IResourceLoader loader) {
             requireNonNull(loader);
-            instance.loadersChain = new LoadersChain();
             instance.loadersChain.add(loader);
             return this;
         }
@@ -134,7 +151,7 @@ public class Rezolver
          * @param loaders the chain of loaders
          * @return the builder
          */
-        public RezolverBuilder withLoaders(Collection<ResourceLoader> loaders) {
+        public RezolverBuilder withLoaders(Collection<IResourceLoader> loaders) {
             requireNonNull(loaders);
             instance.loadersChain = new LoadersChain(loaders);
             return this;

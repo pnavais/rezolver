@@ -16,7 +16,7 @@
 
 package com.github.pnavais.rezolver;
 
-import com.github.pnavais.rezolver.loader.ResourceLoader;
+import com.github.pnavais.rezolver.loader.IResourceLoader;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,7 +32,7 @@ public class LoadersChain {
     /**
      * The Loaders chain.
      */
-    private Collection<ResourceLoader> loadersChain;
+    private Collection<IResourceLoader> loadersChain;
 
     /**
      * Instantiates a new Loaders chain.
@@ -46,7 +46,7 @@ public class LoadersChain {
      * items.
      * @param loadersChain the loader items
      */
-    public LoadersChain(Collection<ResourceLoader> loadersChain) {
+    public LoadersChain(Collection<IResourceLoader> loadersChain) {
         requireNonNull(loadersChain);
         this.loadersChain = loadersChain;
     }
@@ -56,7 +56,7 @@ public class LoadersChain {
      *
      * @param loader the loader to add
      */
-    public void add(ResourceLoader loader) {
+    public void add(IResourceLoader loader) {
         this.loadersChain.add(loader);
     }
 
@@ -65,7 +65,7 @@ public class LoadersChain {
      *
      * @return the loaders chain
      */
-    public Collection<ResourceLoader> getLoadersChain() {
+    public Collection<IResourceLoader> getLoadersChain() {
         return loadersChain;
     }
 }

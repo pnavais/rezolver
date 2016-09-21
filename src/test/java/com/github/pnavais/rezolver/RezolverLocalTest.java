@@ -16,7 +16,7 @@
 
 package com.github.pnavais.rezolver;
 
-import com.github.pnavais.rezolver.loader.LocalLoader;
+import com.github.pnavais.rezolver.loader.FileLoader;
 import com.github.pnavais.rezolver.loader.RemoteLoader;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,13 +41,13 @@ import static org.junit.Assert.assertEquals;
 public class RezolverLocalTest extends RezolverBaseTest {
 
     /** A custom local loader with in-memory filesystem */
-    private static LocalLoader localLoader;
+    private static FileLoader fileLoader;
 
     @BeforeClass
     public static void setup() throws IOException {
         RezolverBaseTest.setup();
-        localLoader = new LocalLoader();
-        localLoader.setFileSystem(fileSystem);
+        fileLoader = new FileLoader();
+        fileLoader.setFileSystem(fileSystem);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class RezolverLocalTest extends RezolverBaseTest {
 
     @Test
     public void fileSystemResourceTest() {
-        Rezolver r = Rezolver.newBuilder().withLoader(localLoader).build();
+        Rezolver r = Rezolver.newBuilder().withLoader(fileLoader).build();
         URL fRes = r.lookup("/tmp/fs_resource.nfo");
         assertNotNull("Error resolving resource from classpath", fRes);
 
@@ -93,13 +93,13 @@ public class RezolverLocalTest extends RezolverBaseTest {
 
     @Test
     public void contextCheckResolvedTest() {
-        Rezolver rezolver = Rezolver.newBuilder().withLoader(localLoader).build();
+        Rezolver rezolver = Rezolver.newBuilder().withLoader(fileLoader).build();
         Context ctx = rezolver.lookupCtx("/tmp/fs_resource.nfo");
         assertNotNull("Error retrieving the resolution context", ctx);
         assertNotNull("Resource resolution mismatch.Wrong URL", ctx.getResURL());
         assertTrue("Resource resolution status error", ctx.isResolved());
         assertNotNull(ctx.getSourceEntity());
-        assertEquals("Error retrieving the resolution source", LocalLoader.class.getSimpleName(), ctx.getSourceEntity());
+        assertEquals("Error retrieving the resolution source", FileLoader.class.getSimpleName(), ctx.getSourceEntity());
     }
 
     @Test
