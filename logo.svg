@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="92.925461mm"
-   height="15.746975mm"
-   viewBox="0 0 329.26325 55.796336"
+   width="87mm"
+   height="18mm"
+   viewBox="0 0 308.26753 63.779491"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.60327149"
-     inkscape:cx="354.60265"
-     inkscape:cy="-572.96301"
+     inkscape:zoom="3.4126189"
+     inkscape:cx="135.87199"
+     inkscape:cy="60.909609"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -56,30 +56,28 @@
      inkscape:label="Capa 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-28.971115,-22.148351)">
+     transform="translate(-58.350565,-10.53582)">
     <g
-       id="g4274"
-       transform="matrix(0.80797083,0,0,0.80797083,-96.224677,-360.04068)"
-       inkscape:export-xdpi="90"
-       inkscape:export-ydpi="90">
+       id="g4213"
+       transform="translate(4.4903027,-3.802063)">
       <text
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
          sodipodi:linespacing="125%"
-         id="text3336"
-         y="541.29077"
-         x="147.0323"
-         style="font-style:normal;font-weight:normal;font-size:73.66118622px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:1;fill:#1c305b;fill-opacity:0.55113639;stroke:none;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.40909095"
+         id="text3336-1"
+         y="73.341118"
+         x="53.068512"
+         style="font-style:normal;font-weight:normal;font-size:59.51609039px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:1;fill:#1c305b;fill-opacity:0.55113639;stroke:none;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.40909095"
          xml:space="preserve"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:92.07648468px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';fill:#1c305b;fill-opacity:0.55113639;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.40909095"
-           y="541.29077"
-           x="147.0323"
-           id="tspan3338"
-           sodipodi:role="line">Rez   </tspan></text>
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:74.39511108px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';fill:#1c305b;fill-opacity:0.55113639;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.40909095"
+           y="73.341118"
+           x="53.068512"
+           id="tspan3338-5"
+           sodipodi:role="line">rezolver</tspan></text>
       <g
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
-         transform="matrix(0.12345104,0,0,0.12345104,324.8244,478.977)"
+         transform="matrix(0.08691539,-0.00305508,0.00305508,0.08691539,170.98396,31.255511)"
          id="g4207">
         <path
            inkscape:connector-curvature="0"
@@ -147,23 +145,17 @@
         <g
            id="g4199" />
       </g>
-      <a
-         id="a4270">
-        <text
-           xml:space="preserve"
-           style="font-style:normal;font-weight:normal;font-size:73.66118622px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:1;fill:#1c305b;fill-opacity:0.55113639;stroke:none;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.40909095"
-           x="389.44928"
-           y="541.34406"
-           id="text3336-1"
-           sodipodi:linespacing="125%"
-           inkscape:export-xdpi="90"
-           inkscape:export-ydpi="90"><tspan
-             sodipodi:role="line"
-             id="tspan3338-5"
-             x="389.44928"
-             y="541.34406"
-             style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:92.07648468px;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';fill:#1c305b;fill-opacity:0.55113639;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.40909095">lver</tspan></text>
-      </a>
     </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="173.41159"
+       y="64.782845"
+       id="text4209"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4211"
+         x="173.41159"
+         y="64.782845"></tspan></text>
   </g>
 </svg>
