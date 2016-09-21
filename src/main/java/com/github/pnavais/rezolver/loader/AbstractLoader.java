@@ -76,6 +76,10 @@ public abstract class AbstractLoader implements IResourceLoader {
      */
     @Override
     public URL resolveWithFallback(String resourcePath) {
+
+        // Strip scheme if present
+        resourcePath = resourcePath.replaceFirst("^[^:]+:", "");
+
         URL resourceURL =  resolveResource(resourcePath);
         // Last resort, try to resolve it using the fallback path as prefix
         if (resourceURL == null) {
@@ -101,7 +105,6 @@ public abstract class AbstractLoader implements IResourceLoader {
      * Tries to resolve the URL of the given resource path.
      *
      * @param resourcePath the path to the resource
-     *
      * @return the resolved resource or null otherwise
      */
     public abstract URL resolveResource(String resourcePath);
@@ -115,7 +118,7 @@ public abstract class AbstractLoader implements IResourceLoader {
 
     /**
      * Retrieves the path separator for the loader.
-     *
+     * *
      * @return the path separator
      */
     protected abstract String getPathSeparator();

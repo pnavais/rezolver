@@ -16,8 +16,8 @@
 
 package com.github.pnavais.rezolver;
 
+import com.github.pnavais.rezolver.loader.ClasspathLoader;
 import com.github.pnavais.rezolver.loader.FileLoader;
-import com.github.pnavais.rezolver.loader.RemoteLoader;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -37,7 +37,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Rezolver JUnit tests
+ * Rezolver Local files tests
  */
 public class RezolverLocalTest extends RezolverBaseTest {
 
@@ -58,6 +58,12 @@ public class RezolverLocalTest extends RezolverBaseTest {
         URL rRes = Rezolver.newBuilder().build().lookup("META-INF/cl_resource.nfo");
         assertNotNull("Error resolving resource from classpath", rRes);
         assertThat(clRes.toExternalForm(), is(rRes.toExternalForm()));
+
+        clRes = Rezolver.resolve("META-INF/cl_resource.nfo");
+        assertNotNull("Error loading resource from classpath", clRes);
+
+        clRes = Rezolver.resolve("classpath:cl_resource.nfo");
+        assertNotNull("Error resolving classpath resource", clRes);
     }
 
     @Test
@@ -71,10 +77,20 @@ public class RezolverLocalTest extends RezolverBaseTest {
     @Test
     public void fileSystemResourceTest() {
         Rezolver r = Rezolver.newBuilder().withLoader(fileLoader).build();
+        resolveTestFiles(r, "/tmp/fs_resource_", ".nfo");
+    }
 
+    /**
+     * Resolves the test file using the given resolver instance.
+     *
+     * @param r the resolver instance
+     * @param prefix the prefix of the test file path
+     * @param suffix the suffix of the test file path
+     */
+    private void resolveTestFiles(Rezolver r, String prefix, String suffix) {
         IntStream.range(0, MAX_TEST_FILES).forEach( i -> {
-            URL fRes = r.lookup("/tmp/fs_resource_"+i+".nfo");
-            assertNotNull("Error resolving resource ["+i+"] from filesystem", fRes);
+            URL fRes = r.lookup(prefix+i+suffix);
+            assertNotNull("Error resolving resource ["+prefix+i+suffix+"] from filesystem", fRes);
             try (InputStream inStream = fRes.openStream()) {
                 BufferedReader in = new BufferedReader(new InputStreamReader(inStream));
                 List<String> contents = in.lines().collect(Collectors.toList());
@@ -92,6 +108,31 @@ public class RezolverLocalTest extends RezolverBaseTest {
         assertNotNull("Error loading resource from classpath with default chain", dfRes);
         assertNotNull("Error loading resource from classpath with default builder", bdRes);
         assertThat(dfRes.toExternalForm(), is(bdRes.toExternalForm()));
+    }
+
+    @Test
+    public void resolveFileWithFallBackTest() {
+        Rezolver r = Rezolver.newBuilder().withLoader(fileLoader).build();
+        IntStream.range(0, MAX_TEST_FILES).forEach( i -> {
+            URL fRes = Rezolver.resolve("fs_resource_"+i+".nfo");
+            assertNull("Error resolving resource ["+i+"]", fRes);
+        });
+
+        // Set the fallback directory and check if the test files are resolved
+        fileLoader.setFallbackPath("/tmp/");
+        resolveTestFiles(r, "/fs_resource_", ".nfo");
+    }
+
+    @Test
+    public void resolveClasspathWithFallBackTest() {
+        URL clRes = Rezolver.resolve("cl_resource_2.nfo");
+        assertNull("Error resolving classpath resource without fallback", clRes);
+
+        clRes = Rezolver.newBuilder().withLoader(new ClasspathLoader(), "META-INF/fallback").build().lookup("cl_resource_2.nfo");
+        assertNotNull("Error resolving resource from classpath", clRes);
+
+        URL clRes2 = Rezolver.resolve("classpath:META-INF/fallback/cl_resource_2.nfo");
+        assertThat("Resolved resource mismatch", clRes, is(clRes2));
     }
 
 }

@@ -134,6 +134,20 @@ public class Rezolver
         }
 
         /**
+         * Starts the loader chain with the given
+         * loader using for it the given fallback path
+         *
+         * @param loader the loader to add
+         * @param fallbackPath the fallback path for the loader
+         * @return the builder
+         */
+        public RezolverBuilder withLoader(IResourceLoader loader, String fallbackPath) {
+            requireNonNull(loader);
+            loader.setFallbackPath(fallbackPath);
+            return withLoader(loader);
+        }
+
+        /**
          * Adds a new loader to the chain
          *
          * @param loader the loader to add
@@ -143,6 +157,20 @@ public class Rezolver
             requireNonNull(loader);
             instance.loadersChain.add(loader);
             return this;
+        }
+
+        /**
+         * Adds a new loader to the chain with the given
+         * fallback path.
+         *
+         * @param loader the loader to add
+         * @param fallbackPath the fallback path
+         * @return the builder
+         */
+        public RezolverBuilder andLoader(IResourceLoader loader, String fallbackPath) {
+            requireNonNull(loader);
+            loader.setFallbackPath(fallbackPath);
+            return andLoader(loader);
         }
 
         /**
