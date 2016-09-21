@@ -1,6 +1,5 @@
 <p align="center">
-    <!--<img src="https://cdn.rawgit.com/pnavais/rezolver/master/logo.svg" height="50">-->
-    <img src="logo.png">
+    <img src="https://cdn.rawgit.com/pnavais/rezolver/master/logo.svg" height="50">
 </p>
 
 <p align="center">
