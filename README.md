@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="logo.svg" width="93" height="16">
+    <img src="https://cdn.rawgit.com/pnavais/rezolver/master/logo.svg" height="50">
 </p>
 
 <p align="center">
