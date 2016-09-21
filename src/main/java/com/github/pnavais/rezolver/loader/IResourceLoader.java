@@ -20,10 +20,44 @@ import com.github.pnavais.rezolver.Context;
 
 import java.net.URL;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Common interface for all loader implementations.
  */
 public interface IResourceLoader {
+
+    /**
+     * Tries to resolve the resource location and
+     * use a fallback resolution in case of failure.
+     *
+     * @param path the resource location path
+     * @return the resolved URL or null if not resolved.
+     */
+    default public Context resolve(String path, Context ctx) {
+        requireNonNull(path);
+        URL resourceURL = null;
+        Context targetCtx = (ctx != null) ? ctx : new Context();
+
+        // Try loader's default resolution
+        resourceURL = resolveURL(path, targetCtx);
+
+        // Use the fallback
+        if (resourceURL == null) {
+            resourceURL = resolveWithFallback(path);
+        }
+
+        // Set the resolved resource data
+        targetCtx.setResURL(resourceURL);
+        targetCtx.setResolved(resourceURL!=null);
+
+        targetCtx.setSourceEntity((resourceURL != null) ?
+                (targetCtx.getSourceEntity() == null) ?
+                        getClass().getSimpleName() :
+                        targetCtx.getSourceEntity() : null);
+
+        return targetCtx;
+    }
 
     /**
      * Resolves the given resource location path to obtain
@@ -43,7 +77,7 @@ public interface IResourceLoader {
      * @param context the resolution context
      * @return the output context
      */
-    Context resolve(String path, Context context);
+    URL resolveURL(String path, Context context);
 
     /**
      * Try to resolve the file on the local file system

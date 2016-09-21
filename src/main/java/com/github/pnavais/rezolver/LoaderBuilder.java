@@ -36,7 +36,7 @@ public class LoaderBuilder {
      * @param resFunction the resource solver function
      * @return the new resource loader
      */
-    public static IResourceLoader with(BiFunction<String, Context, Context> resFunction) {
+    public static IResourceLoader with(BiFunction<String, Context, URL> resFunction) {
         return with(resFunction, null, null);
     }
 
@@ -52,10 +52,10 @@ public class LoaderBuilder {
      * @param fbSetter the fallback path setter function
      * @return a new IResourceLoader implemented with the given predicates.
      */
-    public static IResourceLoader with(BiFunction<String, Context, Context> resFunction, Function<String, URL> fbFunction, Consumer<String> fbSetter) {
+    public static IResourceLoader with(BiFunction<String, Context, URL> resFunction, Function<String, URL> fbFunction, Consumer<String> fbSetter) {
         return new IResourceLoader() {
             @Override
-            public Context resolve(String path, Context context) {
+            public URL resolveURL(String path, Context context) {
                 return Optional.ofNullable(resFunction).map(f -> f.apply(path, context)).orElse(null);
             }
 

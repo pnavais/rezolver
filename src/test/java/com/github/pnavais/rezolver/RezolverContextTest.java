@@ -16,23 +16,21 @@
 
 package com.github.pnavais.rezolver;
 
-import com.github.pnavais.rezolver.loader.AbstractLoader;
 import com.github.pnavais.rezolver.loader.FileLoader;
-import com.github.pnavais.rezolver.loader.IResourceLoader;
-import com.github.pnavais.rezolver.loader.RemoteLoader;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static junit.framework.TestCase.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Rezolver JUnit tests
+ * Rezolver tests for Context handling
  */
 public class RezolverContextTest extends RezolverBaseTest {
 
@@ -52,9 +50,7 @@ public class RezolverContextTest extends RezolverBaseTest {
         assertNotNull("Error retrieving the resolution context", ctx);
         assertNull("Resource resolution mismatch.Wrong URL", ctx.getResURL());
         assertFalse("Resource resolution status error", ctx.isResolved());
-        assertNotNull(ctx.getSourceEntity());
-        assertEquals("Error retrieving the resolution source", RemoteLoader.class.getSimpleName(), ctx.getSourceEntity());
-
+        assertNull("Source entity incorrect", ctx.getSourceEntity());
     }
 
     @Test
@@ -71,19 +67,7 @@ public class RezolverContextTest extends RezolverBaseTest {
     @Test
     public void contextIncrementalBuildTest() {
 
-        Rezolver rezolver = Rezolver.newBuilder().withLoader((s, context) -> {
-            context.setProperty("key_loader_1", "l1");
-            return context;
-        }).andLoader(LoaderBuilder.with((s, context) -> {
-            context.setProperty("key_loader_2", "l2");
-            return context;
-        })).andLoader((s, context) -> {
-            context.setProperty("key_loader_3", "l3");
-            return context;
-        }).andLoader((s, context) -> {
-            context.setProperty("key_loader_4", "l4");
-            return context;
-        }, s -> null, s -> {}).build();
+        Rezolver rezolver = createTestRezolver();
 
         Context ctx = rezolver.lookupCtx("dummy");
         assertNotNull("Error retrieving the context", ctx);
@@ -97,6 +81,60 @@ public class RezolverContextTest extends RezolverBaseTest {
         expectedData.put("key_loader_3", "l3");
         expectedData.put("key_loader_4", "l4");
         assertEquals("Retrieved resolution data mismatch",expectedData, data);
+    }
+
+    @Test
+    public void contextResetBuildTest() {
+
+        Rezolver rezolver = createTestRezolver();
+
+        Context ctx = rezolver.lookupCtx("dummy");
+        assertNotNull("Error retrieving the context", ctx);
+        assertFalse("Error during resolution", ctx.isResolved());
+
+        Context rezCtx = rezolver.getContext();
+        assertNotNull("Error retrieving context", rezCtx);
+        assertThat("Context mismatch", ctx, is(rezCtx));
+
+        rezCtx.clear();
+
+        ctx = rezolver.lookupCtx("stop_l1");
+        assertNotNull("Error retrieving context", ctx);
+        assertTrue("Error resolving the resource", ctx.isResolved());
+        assertEquals("Context size mismatch",ctx.getData().size(), 1);
+        assertEquals("Error retrieving key property from context", "l1", ctx.getProperty("key_loader_1"));
+        assertEquals("Error retrieving source entity", "l1", ctx.getSourceEntity());
+
+        ctx = rezolver.lookupCtx("stop_l2");
+        assertNotNull("Error retrieving context", ctx);
+        assertEquals("Context size mismatch", 4, ctx.getData().size());
+        assertFalse("Error resolving the resource",ctx.isResolved());
+        assertNull("Error retrieving source entity", ctx.getSourceEntity());
+    }
+
+    /**
+     * Creates a custom Rezolver with dummy loaders to
+     * handle context creation.
+     *
+     * @return the test Rezolver instance
+     */
+    private Rezolver createTestRezolver() {
+        URL dummyURL = getClass().getProtectionDomain().getCodeSource().getLocation();
+
+        return Rezolver.newBuilder().withLoader((s, context) -> {
+                context.setProperty("key_loader_1", "l1");
+                context.setSourceEntity("l1");
+                return ((s!=null) && (s.equals("stop_l1"))) ? dummyURL : null;
+            }).andLoader(LoaderBuilder.with((s, context) -> {
+                context.setProperty("key_loader_2", "l2");
+                return null;
+            })).andLoader((s, context) -> {
+                context.setProperty("key_loader_3", "l3");
+                return null;
+            }).andLoader((s, context) -> {
+                context.setProperty("key_loader_4", "l4");
+                return null;
+            }, s -> null, s -> {}).build();
     }
 
 }

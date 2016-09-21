@@ -139,7 +139,7 @@ public class Rezolver
          * @param rFunction the functional interface
          * @return the builder
          */
-        public RezolverBuilder withLoader(BiFunction<String, Context, Context> rFunction) {
+        public RezolverBuilder withLoader(BiFunction<String, Context, URL> rFunction) {
             return withLoader(LoaderBuilder.with(rFunction));
         }
 
@@ -150,7 +150,7 @@ public class Rezolver
          * @param rFunction the functional interface
          * @return the builder
          */
-        public RezolverBuilder withLoader(BiFunction<String, Context, Context> rFunction, Function<String, URL> fbFunction, Consumer<String> fbSetter) {
+        public RezolverBuilder withLoader(BiFunction<String, Context, URL> rFunction, Function<String, URL> fbFunction, Consumer<String> fbSetter) {
             return withLoader(LoaderBuilder.with(rFunction,fbFunction, fbSetter));
         }
 
@@ -200,7 +200,7 @@ public class Rezolver
          * @param rFunction the functional interface
          * @return the builder
          */
-        public RezolverBuilder andLoader(BiFunction<String, Context, Context> rFunction) {
+        public RezolverBuilder andLoader(BiFunction<String, Context, URL> rFunction) {
             return andLoader(LoaderBuilder.with(rFunction));
         }
 
@@ -211,7 +211,7 @@ public class Rezolver
          * @param rFunction the functional interface
          * @return the builder
          */
-        public RezolverBuilder andLoader(BiFunction<String, Context, Context> rFunction, Function<String, URL> fbFunction, Consumer<String> fbSetter) {
+        public RezolverBuilder andLoader(BiFunction<String, Context, URL> rFunction, Function<String, URL> fbFunction, Consumer<String> fbSetter) {
             return andLoader(LoaderBuilder.with(rFunction,fbFunction, fbSetter));
         }
 

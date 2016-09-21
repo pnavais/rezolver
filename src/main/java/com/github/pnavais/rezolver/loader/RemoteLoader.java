@@ -43,17 +43,12 @@ public class RemoteLoader implements IResourceLoader {
      * @param path the resource location path
      * @return the resolved URL or null if not resolved.
      */
-    public Context resolve(String path, Context context) {
+    public URL resolveURL(String path, Context context) {
         requireNonNull(path);
         URL resourceURL = null;
-        Context result = (context != null) ? context : new Context();
+        //Context result = (context != null) ? context : new Context();
 
-        // Set the resolved resource if any
-        result.setResURL(resourceURL);
-        result.setResolved(resourceURL!=null);
-        result.setSourceEntity(getClass().getSimpleName());
-
-        return result;
+        return resourceURL;
     }
 
     /**

@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -135,6 +134,9 @@ public class RezolverLocalTest extends RezolverBaseTest {
         clRes = Rezolver.resolve("META-INF/cl_resource.nfo");
         assertNotNull("Error loading resource from classpath", clRes);
 
+        clRes = Rezolver.resolve("cl_resource.nfo");
+        assertNotNull("Error resolving classpath resource", clRes);
+
         clRes = Rezolver.resolve("classpath:cl_resource.nfo");
         assertNotNull("Error resolving classpath resource", clRes);
     }
@@ -165,6 +167,14 @@ public class RezolverLocalTest extends RezolverBaseTest {
         loader.setClassLoader(customClassLoader);
         URL cRes = Rezolver.newBuilder().withLoader(loader).build().lookup("cl_resource_3.nfo");
         assertNotNull("Error resolving resource from custom classloader", cRes);
+    }
+
+    @Test
+    public void resolveWithCustomFallbackTest() {
+//        Rezolver rezolver = Rezolver.newBuilder().withLoader(
+//                (s, context) -> { context;
+//        }, s -> null, s -> {
+//        }).build();
     }
 
 }

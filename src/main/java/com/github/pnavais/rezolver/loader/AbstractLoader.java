@@ -41,29 +41,16 @@ public abstract class AbstractLoader implements IResourceLoader {
      * @return the resolved URL or null if not resolved.
      */
     @Override
-    public Context resolve(String path, Context context) {
+    public URL resolveURL(String path, Context context) {
         requireNonNull(path);
         URL resourceURL = null;
-        Context result = (context != null) ? context : new Context();
 
         // Try to resolve it using the schema prefix
         if (path.startsWith(getUrlScheme()+":")) {
             resourceURL = resolveResource(path.replaceFirst("^[^:]+:", ""));
         }
 
-        // If the file is not resolved yet try to guess its location
-        if (resourceURL == null) {
-            resourceURL = resolveWithFallback(path);
-        }
-
-        // Set the resolved resource if any
-        result.setResURL(resourceURL);
-        result.setResolved(resourceURL!=null);
-        if (resourceURL!=null) {
-            result.setSourceEntity(getClass().getSimpleName());
-        }
-
-        return result;
+        return resourceURL;
     }
 
     /**

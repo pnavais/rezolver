@@ -16,8 +16,8 @@
 
 package com.github.pnavais.rezolver.loader;
 
-import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.*;
 
@@ -119,27 +119,11 @@ public class FileLoader extends AbstractLoader {
      * @return the running path or null if not found
      */
     private String getRunningPath() {
-        String path = null;
-        Class<?> clazz = FileLoader.class;
-        if (Thread.currentThread().getStackTrace().length>2) {
-            String className = Thread.currentThread().getStackTrace()[3].getClassName();
-            if (className != null) {
-                try {
-                    clazz = Class.forName(className);
-                } catch (Exception ignored) { }
-            }
-        }
-
-        URL location = clazz.getProtectionDomain().getCodeSource().getLocation();
-        // Check if the code source is inside a file (JAR)
+        String path = "";
         try {
-            File f = new File(location.toURI());
-            if (f.isFile()) {
-                path = Paths.get(f.getParentFile().getCanonicalFile().toURI()).toString();
-            }
-        } catch (Exception ignored) {
+            path = FileLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString();
+        } catch (URISyntaxException e) {
         }
-
         return path;
     }
 
