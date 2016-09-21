@@ -1,5 +1,6 @@
-# Rezolver
-<p align="center"><sup><strong>Simple resource locator for Java 8</strong></sup></p>
+<p align="center">
+    <img src="logo.png">
+</p>
 
 <p align="center">
     <a href="https://travis-ci.org/pnavais/rezolver">
@@ -11,3 +12,8 @@
              alt="Coverage">
     </a>
 </p>
+
+<p align="center"><sup><strong>Simple resource locator for Java 8</strong></sup></p>
+---
+
+
