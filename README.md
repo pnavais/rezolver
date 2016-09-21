@@ -8,9 +8,13 @@
         <img src="https://img.shields.io/travis/pnavais/rezolver.svg"
              alt="Build Status">
     </a>
-        <a href="https://coveralls.io/github/pnavais/rezolver?branch=master">
+    <a href="https://coveralls.io/github/pnavais/rezolver?branch=master">
         <img src="https://img.shields.io/coveralls/pnavais/rezolver.svg"
              alt="Coverage">
+    </a>
+    <a href="LICENSE">
+        <img src="https://img.shields.io/badge/license-Apache-blue.svg"
+             alt="Apache-Licensed">
     </a>
 </p>
 
