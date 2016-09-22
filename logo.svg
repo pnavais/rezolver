@@ -17,7 +17,17 @@
    inkscape:version="0.91 r13725"
    sodipodi:docname="logo.svg">
   <defs
-     id="defs4" />
+     id="defs4" 
+	 >
+	   <style type="text/css">
+   <![CDATA[
+    @font-face {
+        font-family: Montserrat;
+        src: local('Montserrat-Regular'), url(https://fonts.gstatic.com/s/montserrat/v7/zhcz-_WihjSQC0oHJ9TCYPk_vArhqVIZ0nv9q090hN8.woff2) format('woff2');
+    }
+   ]]>
+ </style>
+	 </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -26,13 +36,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.206543"
-     inkscape:cx="291.8022"
-     inkscape:cy="-90.087209"
+     inkscape:cx="153.56436"
+     inkscape:cy="-17.525181"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
+     inkscape:window-width="2560"
+     inkscape:window-height="1387"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -48,7 +58,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -58,26 +68,25 @@
      id="layer1"
      transform="translate(-40.807449,-11.74221)">
     <g
-       id="g4265"
-       transform="translate(1.4582619,-0.25647918)">
+       id="g3456">
       <text
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
          sodipodi:linespacing="125%"
          id="text3336-1"
-         y="69.163307"
-         x="36.546467"
+         y="69.07048"
+         x="38.00473"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:59.51609039px;line-height:125%;font-family:Montserrat;-inkscape-font-specification:Montserrat;letter-spacing:0px;word-spacing:0px;opacity:1;fill:#1c305b;fill-opacity:0.55113639;stroke:none;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.40909095"
          xml:space="preserve"><tspan
            style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:74.39511108px;font-family:Montserrat;-inkscape-font-specification:Montserrat;fill:#1c305b;fill-opacity:0.55113639;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.40909095"
-           y="69.163307"
-           x="36.546467"
+           y="69.07048"
+           x="38.00473"
            id="tspan3338-5"
-           sodipodi:role="line">Rezolver</tspan></text>
+           sodipodi:role="line">Rez  lver</tspan></text>
       <g
          inkscape:export-ydpi="90"
          inkscape:export-xdpi="90"
-         transform="matrix(0.08691539,-0.00305508,0.00305508,0.08691539,177.76729,27.211629)"
+         transform="matrix(0.08691539,-0.00305508,0.00305508,0.08691539,174.5408,26.95515)"
          id="g4207">
         <path
            inkscape:connector-curvature="0"
@@ -156,6 +165,6 @@
          sodipodi:role="line"
          id="tspan4211"
          x="173.41159"
-         y="64.782845"></tspan></text>
+         y="64.782845" /></text>
   </g>
 </svg>
