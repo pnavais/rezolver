@@ -6,15 +6,15 @@
 <p align="center">
     <a href="https://travis-ci.org/pnavais/rezolver">
         <img src="https://img.shields.io/travis/pnavais/rezolver.svg"
-             alt="Build Status">
+             alt="Build Status"/>
     </a>
     <a href="https://coveralls.io/github/pnavais/rezolver?branch=master">
         <img src="https://img.shields.io/coveralls/pnavais/rezolver.svg"
-             alt="Coverage">
+             alt="Coverage"/>
     </a>
-    <a href="LICENSE">
-        <img src="https://img.shields.io/badge/license-Apache-blue.svg"
-             alt="Apache-Licensed">
+     <a href="LICENSE.txt">
+       <img src="https://img.shields.io/github/license/pnavais/rezolver.svg"
+            alt="License"/>
     </a>
 </p>
 
