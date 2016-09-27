@@ -17,6 +17,7 @@
 package com.github.pnavais.rezolver;
 
 import com.github.pnavais.rezolver.loader.impl.ClasspathLoader;
+import com.github.pnavais.rezolver.loader.impl.LocalLoader;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -25,6 +26,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -102,6 +104,42 @@ public class RezolverLocalTest extends RezolverBaseTest {
     }
 
     @Test
+    public void resolveFileWithCustomFallBackTest() {
+
+        LocalLoader loader = new LocalLoader();
+        loader.setFileSystem(fileSystem);
+        Rezolver<URL> r = Rezolver.<URL>newBuilder()
+                .withLoader(new ClasspathLoader())
+                .andLoader(loader, "/tmp/")
+                .build();
+
+        resolveTestFiles(r, "/fs_resource_", ".nfo");
+    }
+
+    @Test
+    public void resolveFileWithFallBackOrderTest() {
+        LocalLoader loader = new LocalLoader();
+        loader.setFileSystem(fileSystem);
+        Rezolver<URL> r = Rezolver.<URL>newBuilder()
+                .withLoaders(Arrays.asList(loader, new ClasspathLoader()))
+                .build();
+
+        URL dupRes = r.lookup("dup_resource.nfo");
+        assertNotNull("Error resolving the resource", dupRes);
+        assertNotNull("Error retrieving the context", r.getContext());
+        assertEquals("Resource resolution mismatch", ClasspathLoader.class.getSimpleName(), r.getContext().getSourceEntity());
+
+        // Use a fallback path
+        loader.setFallbackLocation("/tmp/");
+        dupRes = r.lookup("dup_resource.nfo");
+        assertNotNull("Error resolving the resource", dupRes);
+        assertNotNull("Error retrieving the context", r.getContext());
+        assertEquals("Resource resolution mismatch", LocalLoader.class.getSimpleName(), r.getContext().getSourceEntity());
+    }
+
+
+
+    @Test
     public void resolveIncorrectFilePathTest() {
         try {
             URL res = Rezolver.resolve("file:incorrect:path:");
@@ -159,10 +197,10 @@ public class RezolverLocalTest extends RezolverBaseTest {
 
     /*@Test
     public void resolveWithCustomFallbackTest() {
-//        Rezolver rezolver = Rezolver.newBuilder().withLoader(
-//                (s, context) -> { context;
-//        }, s -> null, s -> {
-//        }).build();
+        Rezolver rezolver = Rezolver.newBuilder().withLoader(
+                (s, context) -> { context;
+        }, s -> null, s -> {
+        }).build();
     }*/
 
 }

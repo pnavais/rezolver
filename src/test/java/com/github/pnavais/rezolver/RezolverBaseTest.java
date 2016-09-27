@@ -25,9 +25,8 @@ import org.junit.BeforeClass;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.stream.IntStream;
 
 /**
@@ -65,6 +64,9 @@ public class RezolverBaseTest {
         }
 
         IntStream.range(0, MAX_TEST_FILES).parallel().forEach(i -> writeTestFile(tmp, "fs_resource_" + i + ".nfo"));
+
+        // Create the duplicate resource
+        writeTestFile(tmp, "dup_resource.nfo");
     }
 
     /**
@@ -84,26 +86,26 @@ public class RezolverBaseTest {
 
     @AfterClass
     public static void tearDown() {
-        IntStream.range(0, MAX_TEST_FILES).parallel().forEach(i -> deleteTestFile("/tmp/fs_resource_" + i + ".nfo"));
+
+        Path test_dir = fileSystem.getPath("/tmp/");
         try {
-            Files.deleteIfExists(fileSystem.getPath("/tmp/"));
+            Files.walkFileTree(test_dir, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    Files.deleteIfExists(file);
+                    return FileVisitResult.CONTINUE;
+                }
+
+                @Override
+                public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                    Files.delete(dir);
+                    return FileVisitResult.CONTINUE;
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * Deletes a file
-     *
-     * @param fileName the file to remove
-     */
-    private static void deleteTestFile(String fileName) {
-        Path testFile = fileSystem.getPath(fileName);
-        try {
-            Files.delete(testFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 }
