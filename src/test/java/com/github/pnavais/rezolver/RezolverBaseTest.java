@@ -16,6 +16,7 @@
 
 package com.github.pnavais.rezolver;
 
+import com.github.pnavais.rezolver.loader.impl.LocalLoader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
@@ -35,24 +36,34 @@ import java.util.stream.IntStream;
  */
 public class RezolverBaseTest {
 
-    /**
-     * The testing in-memory file system
-     */
+    /** A custom local loader with in-memory filesystem */
+    protected LocalLoader localLoader;
+
+    /** The testing in-memory file system */
     protected static FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
 
-    /**
-     * The maximum number of test files
-     */
+    /** The maximum number of test files */
     protected static int MAX_TEST_FILES = 10;
+
+    /**
+     * Initializes default loaders
+     */
+    public RezolverBaseTest() {
+        localLoader = new LocalLoader();
+        localLoader.setFileSystem(fileSystem);
+    }
 
     @BeforeClass
     public static void setup() {
+
+        // Create in memory test files
         Path tmp = fileSystem.getPath("/tmp/");
         try {
             Files.createDirectory(tmp);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         IntStream.range(0, MAX_TEST_FILES).parallel().forEach(i -> writeTestFile(tmp, "fs_resource_" + i + ".nfo"));
     }
 

@@ -19,20 +19,22 @@ package com.github.pnavais.rezolver;
 import com.github.pnavais.rezolver.loader.IResourceLoader;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
 /**
- * A {@link LoadersChain} contains several resource loader implementations
+ * A {@link LoadersChain} contains several context aware loader implementations
  * and is intended for sequential iteration.
  */
-public class LoadersChain {
+public class LoadersChain<R> {
 
     /**
      * The Loaders chain.
      */
-    private Collection<IResourceLoader> loadersChain;
+    private Collection<IResourceLoader<R>> loadersChain;
 
     /**
      * Instantiates a new Loaders chain.
@@ -46,7 +48,7 @@ public class LoadersChain {
      * items.
      * @param loadersChain the loader items
      */
-    public LoadersChain(Collection<IResourceLoader> loadersChain) {
+    public LoadersChain(Collection<IResourceLoader<R>> loadersChain) {
         requireNonNull(loadersChain);
         this.loadersChain = loadersChain;
     }
@@ -56,7 +58,7 @@ public class LoadersChain {
      *
      * @param loader the loader to add
      */
-    public void add(IResourceLoader loader) {
+    public void add(IResourceLoader<R> loader) {
         this.loadersChain.add(loader);
     }
 
@@ -65,7 +67,21 @@ public class LoadersChain {
      *
      * @return the loaders chain
      */
-    public Collection<IResourceLoader> getLoadersChain() {
+    public Collection<IResourceLoader<R>> getLoadersChain() {
         return loadersChain;
+    }
+
+    /**
+     * Creates a loaders chain from the given parameterized varargs
+     * of loaders
+     * @param loaders the loaders
+     * @param <T> the parameterized type
+     * @return
+     */
+    @SafeVarargs
+    public static <T> LoadersChain<T> from(IResourceLoader<T>... loaders) {
+        LoadersChain<T> chain = new LoadersChain<>();
+        Optional.ofNullable(loaders).ifPresent(ls -> Arrays.stream(ls).forEachOrdered(chain::add));
+        return chain;
     }
 }

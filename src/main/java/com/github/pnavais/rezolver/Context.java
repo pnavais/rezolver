@@ -25,12 +25,15 @@ import java.util.WeakHashMap;
  * URL of the resource, the resolution status and any arbitrary data
  * needed during resource resolution.
  */
-public class Context {
+public class Context<R> {
 
     /** The resource resolution status */
     private boolean isResolved;
 
-    /** The resource's resolved URL */
+    /** The resolved resource */
+    private R item;
+
+    /** The resource's resolved URL (if available)*/
     private URL resURL;
 
     /** The source entity that resolved the resource */
@@ -66,12 +69,21 @@ public class Context {
     }
 
     /**
-     * Sets the resolution source
+     * Retrieves the resolved item
      *
-     * @param source the source entity
+     * @return the resolved item
      */
-    public void setSourceEntity(String source) {
-        this.sourceEntity = source;
+    public R getItem() {
+        return item;
+    }
+
+    /**
+     * Sets the resolved item
+     *
+     * @param item the resolved item
+     */
+    public void setItem(R item) {
+        this.item = item;
     }
 
     /**
@@ -91,6 +103,15 @@ public class Context {
      */
     public void setResURL(URL resURL) {
         this.resURL = resURL;
+    }
+
+    /**
+     * Sets the resolution source
+     *
+     * @param source the source entity
+     */
+    public void setSourceEntity(String source) {
+        this.sourceEntity = source;
     }
 
     /**

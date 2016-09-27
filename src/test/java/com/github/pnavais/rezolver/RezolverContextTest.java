@@ -16,33 +16,20 @@
 
 package com.github.pnavais.rezolver;
 
-import com.github.pnavais.rezolver.loader.FileLoader;
-import org.junit.BeforeClass;
+import com.github.pnavais.rezolver.loader.impl.LocalLoader;
 import org.junit.Test;
 
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static junit.framework.TestCase.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Rezolver tests for Context handling
  */
 public class RezolverContextTest extends RezolverBaseTest {
-
-    /** A custom local loader with in-memory filesystem */
-    private static FileLoader fileLoader;
-
-    @BeforeClass
-    public static void setup() {
-        RezolverBaseTest.setup();
-        fileLoader = new FileLoader();
-        fileLoader.setFileSystem(fileSystem);
-    }
 
     @Test
     public void contextCheckUnresolvedTest() {
@@ -55,21 +42,21 @@ public class RezolverContextTest extends RezolverBaseTest {
 
     @Test
     public void contextCheckResolvedTest() {
-        Rezolver rezolver = Rezolver.newBuilder().withLoader(fileLoader).build();
+        Rezolver rezolver = Rezolver.withLoader(localLoader).build();
         Context ctx = rezolver.lookupCtx("/tmp/fs_resource_0.nfo");
         assertNotNull("Error retrieving the resolution context", ctx);
         assertNotNull("Resource resolution mismatch.Wrong URL", ctx.getResURL());
         assertTrue("Resource resolution status error", ctx.isResolved());
         assertNotNull(ctx.getSourceEntity());
-        assertEquals("Error retrieving the resolution source", FileLoader.class.getSimpleName(), ctx.getSourceEntity());
+        assertEquals("Error retrieving the resolution source", LocalLoader.class.getSimpleName(), ctx.getSourceEntity());
     }
 
     @Test
     public void contextIncrementalBuildTest() {
 
-        Rezolver rezolver = createTestRezolver();
+        Rezolver<?> rezolver = createTestRezolver();
 
-        Context ctx = rezolver.lookupCtx("dummy");
+        Context<?> ctx = rezolver.lookupCtx("dummy");
         assertNotNull("Error retrieving the context", ctx);
         assertFalse("Error during resolution", ctx.isResolved());
         Map<String, Object> data = ctx.getData();
@@ -80,19 +67,19 @@ public class RezolverContextTest extends RezolverBaseTest {
         expectedData.put("key_loader_2", "l2");
         expectedData.put("key_loader_3", "l3");
         expectedData.put("key_loader_4", "l4");
-        assertEquals("Retrieved resolution data mismatch",expectedData, data);
+        assertEquals("Retrieved resolution data mismatch", expectedData, data);
     }
 
     @Test
     public void contextResetBuildTest() {
 
-        Rezolver rezolver = createTestRezolver();
+        Rezolver<?> rezolver = createTestRezolver();
 
-        Context ctx = rezolver.lookupCtx("dummy");
+        Context<?> ctx = rezolver.lookupCtx("dummy");
         assertNotNull("Error retrieving the context", ctx);
         assertFalse("Error during resolution", ctx.isResolved());
 
-        Context rezCtx = rezolver.getContext();
+        Context<?> rezCtx = rezolver.getContext();
         assertNotNull("Error retrieving context", rezCtx);
         assertThat("Context mismatch", ctx, is(rezCtx));
 
@@ -101,14 +88,14 @@ public class RezolverContextTest extends RezolverBaseTest {
         ctx = rezolver.lookupCtx("stop_l1");
         assertNotNull("Error retrieving context", ctx);
         assertTrue("Error resolving the resource", ctx.isResolved());
-        assertEquals("Context size mismatch",ctx.getData().size(), 1);
+        assertEquals("Context size mismatch", ctx.getData().size(), 1);
         assertEquals("Error retrieving key property from context", "l1", ctx.getProperty("key_loader_1"));
         assertEquals("Error retrieving source entity", "l1", ctx.getSourceEntity());
 
         ctx = rezolver.lookupCtx("stop_l2");
         assertNotNull("Error retrieving context", ctx);
         assertEquals("Context size mismatch", 4, ctx.getData().size());
-        assertFalse("Error resolving the resource",ctx.isResolved());
+        assertFalse("Error resolving the resource", ctx.isResolved());
         assertNull("Error retrieving source entity", ctx.getSourceEntity());
     }
 
@@ -118,24 +105,25 @@ public class RezolverContextTest extends RezolverBaseTest {
      *
      * @return the test Rezolver instance
      */
-    private Rezolver createTestRezolver() {
+    private Rezolver<?> createTestRezolver() {
         URL dummyURL = getClass().getProtectionDomain().getCodeSource().getLocation();
 
-        return Rezolver.newBuilder().withLoader((s, context) -> {
-                context.setProperty("key_loader_1", "l1");
-                context.setSourceEntity("l1");
-                return ((s!=null) && (s.equals("stop_l1"))) ? dummyURL : null;
-            }).andLoader(LoaderBuilder.with((s, context) -> {
+        return Rezolver.withLoader((location, context) -> {
+            context.setProperty("key_loader_1", "l1");
+            context.setSourceEntity("l1");
+            return ((location!=null) && (location.equals("stop_l1"))) ? dummyURL : null;
+        }).andLoader((location, context) -> {
                 context.setProperty("key_loader_2", "l2");
                 return null;
-            })).andLoader((s, context) -> {
+        }).andLoader((location, context) -> {
                 context.setProperty("key_loader_3", "l3");
                 return null;
-            }).andLoader((s, context) -> {
-                context.setProperty("key_loader_4", "l4");
-                return null;
-            }, s -> null, s -> {}).build();
+        }).andLoader((location, context) -> {
+            context.setProperty("key_loader_4", "l4");
+            return null;
+        }).build();
     }
+
 
 }
 

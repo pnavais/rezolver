@@ -16,18 +16,27 @@
 
 package com.github.pnavais.rezolver.loader;
 
+import com.github.pnavais.rezolver.Context;
+
 /**
- * Common interface for all loader implementations.
+ * Base interface for all classes holding a context used
+ * during resource resolution.
  */
-public interface IResourceLoader<R> {
+public interface IContextAware<R> {
 
     /**
-     * Resolves the given resource location  information to obtain
-     * the actual resource or null when the loader cannot resolve it.
+     * Establishes the context to use
+     * during resource resolution
      *
-     * @param location the resource location
-     * @return the resolved resource
+     * @param context the context to use
      */
-    R resolve(String location);
+    void setContext(Context<R> context);
 
+    /**
+     * Retrieves the context used
+     * during resource resolution
+     *
+     * @return the context
+     */
+    Context<R> getContext();
 }

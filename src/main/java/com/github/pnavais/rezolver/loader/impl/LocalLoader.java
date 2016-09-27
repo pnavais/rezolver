@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.pnavais.rezolver.loader;
+package com.github.pnavais.rezolver.loader.impl;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -32,24 +32,24 @@ import static java.util.Objects.requireNonNull;
  *  specified resource location string and try to resolve it as last resort.
  * </p>
  */
-public class FileLoader extends AbstractLoader {
+public class LocalLoader extends URL_Loader {
 
     /** The file system for lookups */
     private FileSystem fileSystem;
 
     /**
-     * Constructor with custom fallback path.
+     * Constructor with default fallback path.
      */
-    public FileLoader() {
-        this(null);
+    public LocalLoader() {
+        this(getRunningPath());
     }
 
     /**
      * Constructor with default application path
      * as fallback path for resolution purposes.
      */
-    public FileLoader(String path) {
-        fallbackPath = (path != null) ? path : getRunningPath();
+    public LocalLoader(String path) {
+        fallbackLocation = path;
         fileSystem  = FileSystems.getDefault();
     }
 
@@ -57,15 +57,15 @@ public class FileLoader extends AbstractLoader {
      * Retrieves the URL from the given resource path
      * in the filesystem.
      *
-     * @param resourcePath the path to the resource in the filesystem
+     * @param location the path to the resource in the filesystem
      * @return the URL to the resource
      */
     @Override
-    public URL resolveResource(String resourcePath) {
+    public URL lookup(String location) {
         URL resourceURL = null;
         try {
-            if (resourcePath != null) {
-                Path path = fileSystem.getPath(resourcePath);
+            if (location != null) {
+                Path path = fileSystem.getPath(location);
                 if (Files.exists(path)) {
                     try {
                         resourceURL = path.toUri().toURL();
@@ -77,16 +77,6 @@ public class FileLoader extends AbstractLoader {
         }
 
         return resourceURL;
-    }
-
-    /**
-     * Retrieves the URL scheme associated to the loader
-     *
-     * @return the URL scheme
-     */
-    @Override
-    public String getUrlScheme() {
-        return "file";
     }
 
     /**
@@ -118,13 +108,24 @@ public class FileLoader extends AbstractLoader {
      *
      * @return the running path or null if not found
      */
-    private String getRunningPath() {
+    private static String getRunningPath() {
         String path = "";
         try {
-            path = FileLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString();
+            path = LocalLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString();
         } catch (URISyntaxException e) {
         }
         return path;
+    }
+
+    /**
+     * Retrieves the loader schema for
+     * local URL resources.
+     *
+     * @return the loader schema
+     */
+    @Override
+    public String getURL_Scheme() {
+        return "file";
     }
 
 }

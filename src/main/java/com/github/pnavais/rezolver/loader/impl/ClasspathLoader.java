@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.pnavais.rezolver.loader;
-
-import com.github.pnavais.rezolver.Context;
+package com.github.pnavais.rezolver.loader.impl;
 
 import java.net.URL;
 
@@ -30,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  *  specified resource location string and try to resolve it as last resort.
  * </p>
  */
-public class ClasspathLoader extends AbstractLoader {
+public class ClasspathLoader extends URL_Loader {
 
     /** The classloader for classpath lookup */
     private ClassLoader classLoader;
@@ -48,18 +46,27 @@ public class ClasspathLoader extends AbstractLoader {
      * @param path the path to append when resolution fails.
      */
     public ClasspathLoader(String path) {
-        this.fallbackPath = path;
+        this.fallbackLocation = path;
         this.classLoader = getClass().getClassLoader();
     }
 
+    /**
+     * Retrieves the URL from the given resource path
+     * in the classpath.
+     *
+     * @param resourcePath the path to the resource in the classpath
+     * @return the URL of the resource
+     */
     @Override
-    public URL resolveResource(String resourcePath) {
+    public URL lookup(String resourcePath) {
         // Check the resource in the same class loader
         URL resourceURL = classLoader.getResource(resourcePath);
+
         // Fallback to the system class loader
         if (resourceURL == null) {
             resourceURL = ClassLoader.getSystemResource(resourcePath);
         }
+
         return resourceURL;
     }
 
@@ -69,19 +76,10 @@ public class ClasspathLoader extends AbstractLoader {
      * @return the URL scheme
      */
     @Override
-    public String getUrlScheme() {
+    public String getURL_Scheme() {
         return "classpath";
     }
 
-    /**
-     * Retrieves the path separator for the loader.
-     *
-     * @return the path separator
-     */
-    @Override
-    protected String getPathSeparator() {
-        return "/";
-    }
 
     /**
      * Sets the classloader for classpath resolution
