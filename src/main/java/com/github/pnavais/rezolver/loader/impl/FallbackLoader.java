@@ -16,17 +16,46 @@
 
 package com.github.pnavais.rezolver.loader.impl;
 
+import com.github.pnavais.rezolver.ResourceInfo;
+import com.github.pnavais.rezolver.loader.IResourceLoader;
+
+import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
+
 /**
  * <b>FallbackLoader</b>
  * <p>
- *     A loader allowing to use a fallback location as prefix
+ *     A loader allowing to decorate a given resource loader
+ *     and use a fallback location as prefix
  *     in case the resolution failed.
  * </p>
  */
-public abstract class FallbackLoader<R> extends ContextAwareLoader<R> {
+public class FallbackLoader implements IResourceLoader {
+
+    /** The default path separator */
+    public static final String DEFAULT_PATH_SEPARATOR = "/";
+
+    /** The target loader */
+    private final IResourceLoader loader;
 
     /** The location info to use as prefix in case resolution failed */
-    protected String fallbackLocation;
+    protected String fallbackPrefix;
+
+    /** The separator to use when adding the fallback prefix */
+    protected String pathSeparator;
+
+    /**
+     * Creates a @{@link FallbackLoader} wrapping
+     * a given resource loader.
+     *
+     * @param loader the resource loader to wrap
+     */
+    public FallbackLoader(IResourceLoader loader) {
+        requireNonNull(loader);
+        this.loader = loader;
+        this.fallbackPrefix = DEFAULT_PATH_SEPARATOR;
+    }
 
     /**
      * Tries to resolve the file using the supplied loader's
@@ -37,39 +66,40 @@ public abstract class FallbackLoader<R> extends ContextAwareLoader<R> {
      * @return the resource of null if not resolved
      */
     @Override
-    public R resolve(String location) {
-        R resource;
+    public ResourceInfo resolve(String location) {
+        ResourceInfo resource;
 
         // Resolve it using the base resolution
-        resource = super.resolve(location);
+        resource = this.loader.resolve(location);
 
         // Last resort, try to resolve it using the fallback path as prefix
         if (resource == null) {
-            if ((fallbackLocation != null) && (!location.startsWith(fallbackLocation))) {
-                resource = super.resolve(applyFallback(location));
+            if ((fallbackPrefix != null) && (!location.startsWith(fallbackPrefix))) {
+                resource = this.loader.resolve(fallbackPrefix + pathSeparator + location);
             }
         }
+
+        resource = Optional.ofNullable(resource).orElseGet(() -> (!location.startsWith(fallbackPrefix))
+                ? this.loader.resolve()
+                : ResourceInfo.notSolved(location));
+
         return resource;
     }
 
-    /**
-     * Retrieves the separator to apply between the prefix
-     * fallback location and the current location
-     *
-     * @return the prefix separator
-     */
-    protected abstract String applyFallback(String location);
-
-    /**
-     * Sets the fallback location as last resort for
-     * resource resolution
-     *
-     * @param fallbackLocation the fallback location
-     */
-    public void setFallbackLocation(String fallbackLocation) {
-        this.fallbackLocation = fallbackLocation;
+    protected String applyFallback(String location) {
+        return fallbackPrefix + pathSeparator + location
     }
 
 
+    /**
+     * Sets the prefix to add to a location as last resort for
+     * resource resolution
+     *
+     * @param fallbackPrefix the fallback location
+     */
+    public void setFallbackPrefix(String fallbackPrefix) {
+        requireNonNull(fallbackPrefix);
+        this.fallbackPrefix = fallbackPrefix;
+    }
 
 }

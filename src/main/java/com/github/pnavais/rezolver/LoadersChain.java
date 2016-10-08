@@ -18,10 +18,7 @@ package com.github.pnavais.rezolver;
 
 import com.github.pnavais.rezolver.loader.IResourceLoader;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -34,13 +31,13 @@ public class LoadersChain<R> {
     /**
      * The Loaders chain.
      */
-    private Collection<IResourceLoader<R>> loadersChain;
+    private Collection<IResourceLoader> loadersChain;
 
     /**
      * Instantiates a new Loaders chain.
      */
     public LoadersChain() {
-        this.loadersChain = new ArrayList<>();
+        this.loadersChain = new ArrayDeque<>();
     }
 
     /**
@@ -48,7 +45,7 @@ public class LoadersChain<R> {
      * items.
      * @param loadersChain the loader items
      */
-    public LoadersChain(Collection<IResourceLoader<R>> loadersChain) {
+    public LoadersChain(Collection<IResourceLoader> loadersChain) {
         requireNonNull(loadersChain);
         this.loadersChain = loadersChain;
     }
@@ -58,7 +55,7 @@ public class LoadersChain<R> {
      *
      * @param loader the loader to add
      */
-    public void add(IResourceLoader<R> loader) {
+    public void add(IResourceLoader loader) {
         this.loadersChain.add(loader);
     }
 
@@ -67,7 +64,7 @@ public class LoadersChain<R> {
      *
      * @return the loaders chain
      */
-    public Collection<IResourceLoader<R>> getLoadersChain() {
+    public Collection<IResourceLoader> getLoadersChain() {
         return loadersChain;
     }
 
@@ -79,7 +76,7 @@ public class LoadersChain<R> {
      * @return
      */
     @SafeVarargs
-    public static <T> LoadersChain<T> from(IResourceLoader<T>... loaders) {
+    public static <T> LoadersChain<T> from(IResourceLoader... loaders) {
         LoadersChain<T> chain = new LoadersChain<>();
         Optional.ofNullable(loaders).ifPresent(ls -> Arrays.stream(ls).forEachOrdered(chain::add));
         return chain;

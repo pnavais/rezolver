@@ -42,6 +42,7 @@ import static org.junit.Assert.*;
  */
 public class RezolverLocalTest extends RezolverBaseTest {
 
+    /*
     @Test
     public void defaultBuilderLoadingTest() {
         URL dfRes = Rezolver.resolve("classpath:META-INF/cl_resource.nfo");
@@ -67,7 +68,7 @@ public class RezolverLocalTest extends RezolverBaseTest {
     public void fileSystemResourceTest() {
         Rezolver r = Rezolver.withLoader(localLoader).build();
         resolveTestFiles(r, "/tmp/fs_resource_", ".nfo");
-    }
+    }*/
 
     /**
      * Resolves the test file using the given resolver instance.
@@ -76,7 +77,7 @@ public class RezolverLocalTest extends RezolverBaseTest {
      * @param prefix the prefix of the test file path
      * @param suffix the suffix of the test file path
      */
-    private void resolveTestFiles(Rezolver<URL> r, String prefix, String suffix) {
+    /*private void resolveTestFiles(Rezolver<URL> r, String prefix, String suffix) {
         IntStream.range(0, MAX_TEST_FILES).forEach( i -> {
             URL fRes = r.lookup(prefix+i+suffix);
             assertNotNull("Error resolving resource ["+prefix+i+suffix+"] from filesystem", fRes);

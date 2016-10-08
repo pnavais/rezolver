@@ -17,36 +17,42 @@
 package com.github.pnavais.rezolver;
 
 import java.net.URL;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 /**
- * A {@link Context} is a basic container to store the resolved
+ * A {@link ResourceInfo} is a basic container to store the resolved
  * URL of the resource, the resolution status and any arbitrary data
  * needed during resource resolution.
  */
-public class Context<R> {
+public class ResourceInfo {
+
+    /** The path that triggered the search */
+    private String searchPath;
 
     /** The resource resolution status */
     private boolean isResolved;
 
-    /** The resolved resource */
-    private R item;
-
     /** The resource's resolved URL (if available)*/
-    private URL resURL;
+    private URL url;
 
     /** The source entity that resolved the resource */
     private String sourceEntity;
 
-    /** A map to store any arbitrary information needed during resolution */
-    private WeakHashMap<String, Object> map;
+    /**
+     * Sets the search path
+     *
+     * @param searchPath the search path
+     */
+    public void setSearchPath(String searchPath) {
+        this.searchPath = searchPath;
+    }
 
     /**
-     * Default constructor
+     * Retrieves the search path
+     *
+     * @return the search path
      */
-    public Context() {
-        this.map = new WeakHashMap<>();
+    public String getSearchPath() {
+        return searchPath;
     }
 
     /**
@@ -69,31 +75,13 @@ public class Context<R> {
     }
 
     /**
-     * Retrieves the resolved item
-     *
-     * @return the resolved item
-     */
-    public R getItem() {
-        return item;
-    }
-
-    /**
-     * Sets the resolved item
-     *
-     * @param item the resolved item
-     */
-    public void setItem(R item) {
-        this.item = item;
-    }
-
-    /**
      * Retrieves the resource's resolved
      * URL or null if not resolved.
      *
      * @return the resolved URL
      */
-    public URL getResURL() {
-        return resURL;
+    public URL getURL() {
+        return url;
     }
 
     /**
@@ -101,8 +89,8 @@ public class Context<R> {
      *
      * @param resURL the resolved URL
      */
-    public void setResURL(URL resURL) {
-        this.resURL = resURL;
+    public void setURL(URL resURL) {
+        this.url = resURL;
     }
 
     /**
@@ -127,43 +115,30 @@ public class Context<R> {
     }
 
     /**
-     * Keeps in the context a value for
-     * the given key.
+     * Creates a new @{@link ResourceInfo} with no
+     * resolution status for the given location
      *
-     * @param key   the key
-     * @param value the value
+     * @param location the location to search
+     * @return the resource info
      */
-    public void setProperty(String key, Object value) {
-        this.map.put(key,value);
+    public static ResourceInfo notSolved(String location) {
+        ResourceInfo info = new ResourceInfo();
+        info.setSearchPath(location);
+        return info;
     }
 
     /**
-     * Retrieves the value of the property
-     * identified by the given key.
+     * Creates a new @{@link ResourceInfo} with no
+     * resolution status for the given location
      *
-     * @param key the key
-     * @return the property
+     * @param location the location to search
+     * @return the resource info
      */
-    public Object getProperty(String key) {
-        return this.map.get(key);
-    }
-
-    /**
-     * Resets the context values
-     */
-    public void clear() {
-        this.map.clear();
-        isResolved = false;
-        sourceEntity = null;
-    }
-
-    /**
-     * Retrieves the data collected during
-     * resolution.
-     *
-     * @return the data map
-     */
-    public Map<String, Object> getData() {
-        return map;
+    public static ResourceInfo solved(String location, URL resURL) {
+        ResourceInfo info = new ResourceInfo();
+        info.setSearchPath(location);
+        info.setURL(resURL);
+        info.setResolved(resURL!=null);
+        return info;
     }
 }

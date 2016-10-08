@@ -16,10 +16,13 @@
 
 package com.github.pnavais.rezolver.loader;
 
+import com.github.pnavais.rezolver.ResourceInfo;
+
 /**
  * Common interface for all loader implementations.
  */
-public interface IResourceLoader<R> {
+@FunctionalInterface
+public interface IResourceLoader {
 
     /**
      * Resolves the given resource location  information to obtain
@@ -28,6 +31,6 @@ public interface IResourceLoader<R> {
      * @param location the resource location
      * @return the resolved resource
      */
-    R resolve(String location);
+    ResourceInfo resolve(String location);
 
 }

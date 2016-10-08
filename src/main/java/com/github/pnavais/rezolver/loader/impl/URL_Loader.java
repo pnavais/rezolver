@@ -16,6 +16,8 @@
 
 package com.github.pnavais.rezolver.loader.impl;
 
+import com.github.pnavais.rezolver.ResourceInfo;
+
 import java.net.URL;
 
 /**
@@ -25,7 +27,7 @@ import java.net.URL;
  *     in case the resolution failed.
  * </p>
  */
-public abstract class URL_Loader extends FallbackLoader<URL> {
+public abstract class URL_Loader extends FallbackLoader {
 
     /**
      * Use the default loader resolution algorithm and
@@ -35,19 +37,16 @@ public abstract class URL_Loader extends FallbackLoader<URL> {
      * @return the resolved URL or null if not resolved
      */
     @Override
-    public URL resolve(String location) {
+    public ResourceInfo resolve(String location) {
         // Try direct resolution
-        URL resourceURL = super.resolve(location);
+        ResourceInfo resourceInfo = super.resolve(location);
 
         // Try to resolve without schema prefix
-        if ((resourceURL == null) && (location.startsWith(getURL_Scheme()))) {
-            resourceURL = super.resolve(location.replaceFirst("^"+getURL_Scheme()+":", ""));
+        if ((resourceInfo == null) && (location.startsWith(getURL_Scheme()))) {
+            resourceInfo = super.resolve(location.replaceFirst("^"+getURL_Scheme()+":", ""));
         }
 
-        // Keep the resource URL in the context
-        getContext().setResURL(resourceURL);
-
-        return resourceURL;
+        return resourceInfo;
     }
 
     /**
