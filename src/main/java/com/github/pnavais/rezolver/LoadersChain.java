@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
  * A {@link LoadersChain} contains several context aware loader implementations
  * and is intended for sequential iteration.
  */
-public class LoadersChain<R> {
+public class LoadersChain {
 
     /**
      * The Loaders chain.
@@ -72,12 +72,10 @@ public class LoadersChain<R> {
      * Creates a loaders chain from the given parameterized varargs
      * of loaders
      * @param loaders the loaders
-     * @param <T> the parameterized type
-     * @return
+     * @return the loaders chain
      */
-    @SafeVarargs
-    public static <T> LoadersChain<T> from(IResourceLoader... loaders) {
-        LoadersChain<T> chain = new LoadersChain<>();
+    public static LoadersChain from(IResourceLoader[] loaders) {
+        LoadersChain chain = new LoadersChain();
         Optional.ofNullable(loaders).ifPresent(ls -> Arrays.stream(ls).forEachOrdered(chain::add));
         return chain;
     }

@@ -39,11 +39,9 @@ public class FallbackLoader implements IResourceLoader {
     /** The target loader */
     private final IResourceLoader loader;
 
-    /** The location info to use as prefix in case resolution failed */
-    protected String fallbackPrefix;
+    /** The location info to append in case resolution failed */
+    protected String fallbackPath;
 
-    /** The separator to use when adding the fallback prefix */
-    protected String pathSeparator;
 
     /**
      * Creates a @{@link FallbackLoader} wrapping
@@ -54,7 +52,6 @@ public class FallbackLoader implements IResourceLoader {
     public FallbackLoader(IResourceLoader loader) {
         requireNonNull(loader);
         this.loader = loader;
-        this.fallbackPrefix = DEFAULT_PATH_SEPARATOR;
     }
 
     /**
@@ -72,34 +69,43 @@ public class FallbackLoader implements IResourceLoader {
         // Resolve it using the base resolution
         resource = this.loader.resolve(location);
 
-        // Last resort, try to resolve it using the fallback path as prefix
+        // Last resort, try to resolve it using the fallback path
         if (resource == null) {
-            if ((fallbackPrefix != null) && (!location.startsWith(fallbackPrefix))) {
-                resource = this.loader.resolve(fallbackPrefix + pathSeparator + location);
+            if ((fallbackPath != null) && (!location.startsWith(fallbackPath))) {
+                resource = this.loader.resolve(applyFallback(location));
             }
         }
-
-        resource = Optional.ofNullable(resource).orElseGet(() -> (!location.startsWith(fallbackPrefix))
-                ? this.loader.resolve()
-                : ResourceInfo.notSolved(location));
 
         return resource;
     }
 
+    /**
+     * Modify the current location applying the fallback path.
+     * By default, the fallback will be appended to the location
+     * using the path separator.
+     *
+     * @param location location to resolve
+     * @return the location updated with fallback information
+     */
     protected String applyFallback(String location) {
-        return fallbackPrefix + pathSeparator + location
+        requireNonNull(location);
+
+        return fallbackPath
+                + ((this.loader instanceof IFileSystemLoader)
+                    ? ((IFileSystemLoader) this.loader).getPathSeparator()
+                    : DEFAULT_PATH_SEPARATOR)
+                + location;
     }
 
-
     /**
-     * Sets the prefix to add to a location as last resort for
+     * Sets the fallback path to apply to a location as last resort for
      * resource resolution
      *
-     * @param fallbackPrefix the fallback location
+     * @param fallbackPath the fallback location
      */
-    public void setFallbackPrefix(String fallbackPrefix) {
-        requireNonNull(fallbackPrefix);
-        this.fallbackPrefix = fallbackPrefix;
+    public void setFallbackPath(String fallbackPath) {
+        requireNonNull(fallbackPath);
+        this.fallbackPath= fallbackPath;
     }
 
 }

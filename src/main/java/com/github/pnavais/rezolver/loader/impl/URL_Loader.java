@@ -17,8 +17,7 @@
 package com.github.pnavais.rezolver.loader.impl;
 
 import com.github.pnavais.rezolver.ResourceInfo;
-
-import java.net.URL;
+import com.github.pnavais.rezolver.loader.IResourceLoader;
 
 /**
  * <b>FallbackLoader</b>
@@ -27,7 +26,7 @@ import java.net.URL;
  *     in case the resolution failed.
  * </p>
  */
-public abstract class URL_Loader extends FallbackLoader {
+public abstract class URL_Loader implements IResourceLoader {
 
     /**
      * Use the default loader resolution algorithm and
@@ -39,15 +38,17 @@ public abstract class URL_Loader extends FallbackLoader {
     @Override
     public ResourceInfo resolve(String location) {
         // Try direct resolution
-        ResourceInfo resourceInfo = super.resolve(location);
+        ResourceInfo resourceInfo = lookup(location);
 
         // Try to resolve without schema prefix
         if ((resourceInfo == null) && (location.startsWith(getURL_Scheme()))) {
-            resourceInfo = super.resolve(location.replaceFirst("^"+getURL_Scheme()+":", ""));
+            resourceInfo = lookup(location.replaceFirst("^"+getURL_Scheme()+":", ""));
         }
 
         return resourceInfo;
     }
+
+    public abstract ResourceInfo lookup(String location);
 
     /**
      * Retrieves the URL schema
@@ -55,24 +56,5 @@ public abstract class URL_Loader extends FallbackLoader {
      * @return the URL schema
      */
     public abstract String getURL_Scheme();
-
-    /**
-     * Retrieves the path separator for the loader.
-     *
-     * @return the path separator
-     */
-    @Override
-    protected String applyFallback(String location) {
-        return fallbackLocation + getPathSeparator() + location.replaceFirst("^"+getURL_Scheme()+":", "");
-    }
-
-    /**
-     * Retrieves the character used in o separate paths
-     *
-     * @return the path separator character
-     */
-    protected String getPathSeparator() {
-        return "/";
-    }
 
 }

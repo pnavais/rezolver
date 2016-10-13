@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -65,7 +66,7 @@ public class Rezolver
     private LoadersChain loadersChain;
 
     /** The default loaders chain */
-    public static LoadersChain DEFAULT_CHAIN = LoadersChain.from(new LocalLoader(), new ClasspathLoader(), new RemoteLoader());
+    public static LoadersChain DEFAULT_CHAIN = LoadersChain.from(new IResourceLoader[]{new LocalLoader(), new ClasspathLoader(), new RemoteLoader()});
 
     /**
      * This class uses a builder pattern,
@@ -102,19 +103,29 @@ public class Rezolver
      * @param resourcePath the path to the resource
      * @return the resolved URL
      */
-    public ResourceInfo lookup(String resourcePath) {
+    public ResourceInfo resolve(String resourcePath) {
+
+ /*       final ResourceInfo[] info = new ResourceInfo[1];
 
         Optional.ofNullable(this.loadersChain).ifPresent(loaders -> {
+
             loaders.getLoadersChain().stream().filter(l -> {
-
                 // Resolve the resource with the current chain's loader
-                ResourceInfo item = l.resolve(resourcePath);
-
-                return ((item != null) || (this.context.isResolved()));
+                info[0] = l.resolve(resourcePath);
+                return (info[0].isResolved());
             }).findFirst();
-        });
+        });*/
 
-        return null;
+        final ResourceInfo[] info = new ResourceInfo[1];
+
+        loadersChain.getLoadersChain().stream().filter(l -> {
+            // compute and retrieve the wanter info
+            info[0] = l.resolve(resourcePath);
+                return (info[0].isResolved());
+            }).findFirst();
+
+
+        return null; //info[0];
     }
 
     /**
@@ -154,8 +165,9 @@ public class Rezolver
      * @param resourcePath the path to a resource
      * @return the resolved URL or null if not resolved
      */
-    public static URL lookup(String resourcePath) {
-        return RezolverHolder.instance.lookup(resourcePath);
+    public static ResourceInfo lookup(String resourcePath) {
+        return RezolverHolder.instance.resolve(resourcePath);
+
     }
 
 }

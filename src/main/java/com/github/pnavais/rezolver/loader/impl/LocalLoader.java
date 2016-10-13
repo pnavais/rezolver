@@ -16,6 +16,8 @@
 
 package com.github.pnavais.rezolver.loader.impl;
 
+import com.github.pnavais.rezolver.ResourceInfo;
+
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -32,7 +34,7 @@ import static java.util.Objects.requireNonNull;
  *  specified resource location string and try to resolve it as last resort.
  * </p>
  */
-public class LocalLoader extends URL_Loader {
+public class LocalLoader extends URL_Loader implements IFileSystemLoader {
 
     /** The file system for lookups */
     private FileSystem fileSystem;
@@ -41,7 +43,6 @@ public class LocalLoader extends URL_Loader {
      * Constructor with default fallback path.
      */
     public LocalLoader() {
-        this(getRunningPath());
     }
 
     /**
@@ -49,7 +50,6 @@ public class LocalLoader extends URL_Loader {
      * as fallback path for resolution purposes.
      */
     public LocalLoader(String path) {
-        fallbackLocation = path;
         fileSystem  = FileSystems.getDefault();
     }
 
@@ -61,7 +61,7 @@ public class LocalLoader extends URL_Loader {
      * @return the URL to the resource
      */
     @Override
-    public URL lookup(String location) {
+    public ResourceInfo lookup(String location) {
         URL resourceURL = null;
         try {
             if (location != null) {
@@ -76,7 +76,18 @@ public class LocalLoader extends URL_Loader {
         } catch (InvalidPathException e) {
         }
 
-        return resourceURL;
+        return ResourceInfo.from(location,resourceURL);
+    }
+
+    /**
+     * Retrieves the loader schema for
+     * local URL resources.
+     *
+     * @return the loader schema
+     */
+    @Override
+    public String getURL_Scheme() {
+        return "file";
     }
 
     /**
@@ -85,7 +96,7 @@ public class LocalLoader extends URL_Loader {
      * @return the path separator
      */
     @Override
-    protected String getPathSeparator() {
+    public String getPathSeparator() {
         return fileSystem.getSeparator();
     }
 
@@ -94,6 +105,7 @@ public class LocalLoader extends URL_Loader {
      *
      * @param fileSystem the file system
      */
+    @Override
     public void setFileSystem(FileSystem fileSystem) {
         requireNonNull(fileSystem);
         this.fileSystem = fileSystem;
@@ -108,24 +120,14 @@ public class LocalLoader extends URL_Loader {
      *
      * @return the running path or null if not found
      */
-    private static String getRunningPath() {
+    @Override
+    public String getRunningPath() {
         String path = "";
         try {
             path = LocalLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString();
         } catch (URISyntaxException e) {
         }
         return path;
-    }
-
-    /**
-     * Retrieves the loader schema for
-     * local URL resources.
-     *
-     * @return the loader schema
-     */
-    @Override
-    public String getURL_Scheme() {
-        return "file";
     }
 
 }

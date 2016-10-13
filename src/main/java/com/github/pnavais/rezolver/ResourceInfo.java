@@ -18,6 +18,8 @@ package com.github.pnavais.rezolver;
 
 import java.net.URL;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * A {@link ResourceInfo} is a basic container to store the resolved
  * URL of the resource, the resolution status and any arbitrary data
@@ -141,4 +143,17 @@ public class ResourceInfo {
         info.setResolved(resURL!=null);
         return info;
     }
+
+    /**
+     * Creates a new @{@link ResourceInfo} from the
+     * supplied resource information.
+     *
+     * @param resourcePath the requested resource location
+     * @param resourceURL the resolved resource URL
+     * @return the resource info
+     */
+    public static ResourceInfo from(String resourcePath, URL resourceURL) {
+        return (resourceURL != null) ? solved(resourcePath, resourceURL) : notSolved(resourcePath);
+    }
+
 }

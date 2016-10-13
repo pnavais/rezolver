@@ -16,6 +16,12 @@
 
 package com.github.pnavais.rezolver.loader.impl;
 
+import java.nio.file.FileSystem;
+
+/**
+ * Common interface for resource loaders working with
+ * file custom file systems.
+ */
 public interface IFileSystemLoader {
 
     /**
@@ -24,4 +30,24 @@ public interface IFileSystemLoader {
      * @return the path separator
      */
     String getPathSeparator();
+
+
+    /**
+     * Sets the file system for file resolutions
+     *
+     * @param fileSystem the file system
+     */
+    void setFileSystem(FileSystem fileSystem);
+
+    /**
+     * Retrieves the running path in string format or
+     * null if not able to compute it correctly.
+     *
+     * Due to UNC file path issues the recommended way
+     * for conversions is URL -> URI -> Path.
+     *
+     * @return the running path or null if not found
+     */
+    String getRunningPath();
+
 }
