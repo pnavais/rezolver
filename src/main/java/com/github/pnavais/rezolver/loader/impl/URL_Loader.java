@@ -41,7 +41,7 @@ public abstract class URL_Loader implements IResourceLoader {
         ResourceInfo resourceInfo = lookup(location);
 
         // Try to resolve without schema prefix
-        if ((resourceInfo == null) && (location.startsWith(getURL_Scheme()))) {
+        if ((!resourceInfo.isResolved()) && (location.startsWith(getURL_Scheme()))) {
             resourceInfo = lookup(location.replaceFirst("^"+getURL_Scheme()+":", ""));
         }
 

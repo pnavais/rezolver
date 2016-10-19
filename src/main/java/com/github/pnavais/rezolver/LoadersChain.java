@@ -19,6 +19,7 @@ package com.github.pnavais.rezolver;
 import com.github.pnavais.rezolver.loader.IResourceLoader;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Objects.requireNonNull;
 
@@ -74,9 +75,31 @@ public class LoadersChain {
      * @param loaders the loaders
      * @return the loaders chain
      */
-    public static LoadersChain from(IResourceLoader[] loaders) {
-        LoadersChain chain = new LoadersChain();
-        Optional.ofNullable(loaders).ifPresent(ls -> Arrays.stream(ls).forEachOrdered(chain::add));
-        return chain;
+    public static LoadersChain from(Collection<IResourceLoader> loaders) {
+        return new LoadersChain(loaders);
+    }
+
+    /**
+     * Handles the request by passing the resourcePath
+     * through the loaders in the chain stopping at the first
+     * match found.
+     *
+     * @param resourcePath the path to the resource to be resolved
+     */
+    public ResourceInfo process(String resourcePath) {
+        final AtomicReference<ResourceInfo> ref = new AtomicReference<>();
+        Optional.ofNullable(loadersChain).ifPresent(chain -> chain.stream().filter(l -> {
+            ref.set(l.resolve(resourcePath));
+            return ref.get().isResolved();
+        }).findFirst());
+
+        return ref.get();
+    }
+
+    /**
+     * Clears the list of loaders
+     */
+    public void clear() {
+        Optional.ofNullable(this.loadersChain).ifPresent(Collection::clear);
     }
 }

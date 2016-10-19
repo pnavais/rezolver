@@ -24,9 +24,12 @@ import com.github.pnavais.rezolver.loader.impl.LocalLoader;
 import com.github.pnavais.rezolver.loader.impl.RemoteLoader;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -66,7 +69,9 @@ public class Rezolver
     private LoadersChain loadersChain;
 
     /** The default loaders chain */
-    public static LoadersChain DEFAULT_CHAIN = LoadersChain.from(new IResourceLoader[]{new LocalLoader(), new ClasspathLoader(), new RemoteLoader()});
+    public static LoadersChain DEFAULT_CHAIN = LoadersChain.from(Arrays.asList(new LocalLoader(),
+                                                                               new ClasspathLoader(),
+                                                                               new RemoteLoader()));
 
     /**
      * This class uses a builder pattern,
@@ -104,28 +109,9 @@ public class Rezolver
      * @return the resolved URL
      */
     public ResourceInfo resolve(String resourcePath) {
-
- /*       final ResourceInfo[] info = new ResourceInfo[1];
-
-        Optional.ofNullable(this.loadersChain).ifPresent(loaders -> {
-
-            loaders.getLoadersChain().stream().filter(l -> {
-                // Resolve the resource with the current chain's loader
-                info[0] = l.resolve(resourcePath);
-                return (info[0].isResolved());
-            }).findFirst();
-        });*/
-
-        final ResourceInfo[] info = new ResourceInfo[1];
-
-        loadersChain.getLoadersChain().stream().filter(l -> {
-            // compute and retrieve the wanter info
-            info[0] = l.resolve(resourcePath);
-                return (info[0].isResolved());
-            }).findFirst();
-
-
-        return null; //info[0];
+        return Optional.ofNullable(this.loadersChain)
+                .map(loaders -> loaders.process(resourcePath))
+                .orElseGet(() -> ResourceInfo.notSolved(resourcePath));
     }
 
     /**
@@ -136,18 +122,77 @@ public class Rezolver
         /** The rezolver instance */
         private Rezolver instance = new Rezolver();
 
-
-        public RezolverBuilder builder() {
-            return new RezolverBuilder();
+        /**
+         * Setup the defaults for the rezolver
+         * builder. (e.g. assign the default
+         * resource loader chain)
+         *
+         * @return the rezolver builder instance
+         */
+        public RezolverBuilder withDefaults() {
+            instance.loadersChain = DEFAULT_CHAIN;
+            return this;
         }
 
         /**
-         * Retrieves the built instance
+         * Adds the given loader at the end of the chain
+         *
+         * @param loader the loader to add
+         * @return the rezolver builder instance
+         */
+        public RezolverBuilder add(IResourceLoader loader) {
+            requireNonNull(loader);
+            instance.loadersChain.add(loader);
+            return this;
+        }
+
+        /**
+         * Adds the given loader with fallback path
+         * at the end of the chain
+         *
+         * @param loader the loader
+         * @param fallbackPath the fallback path
+         * @return the rezolver builder instance
+         */
+        public RezolverBuilder add(IResourceLoader loader, String fallbackPath) {
+            requireNonNull(loader);
+            requireNonNull(fallbackPath);
+            instance.loadersChain.add(new FallbackLoader(loader, fallbackPath));
+            return this;
+        }
+
+        /**
+         * Adds the collection of loaders to the current builder
+         * chain.
+         * @param loaders the collection of loaders
+         * @return the rezolver builder instance
+         */
+        public RezolverBuilder add(Collection<IResourceLoader> loaders) {
+            requireNonNull(loaders);
+            loaders.forEach(r -> instance.loadersChain.add(r));
+            return this;
+        }
+
+        /**
+         * Retrieves the built Rezolver instance
          *
          * @return the instance
          */
         public Rezolver build() { return instance; }
 
+    }
+
+
+    /**
+     * Creates a new rezolver builder
+     * with an empty chain of resource loaders.
+     *
+     * @return the newly created rezolver builder
+     */
+    public static RezolverBuilder builder() {
+        RezolverBuilder builder = new RezolverBuilder();
+        builder.instance.loadersChain.clear();
+        return builder;
     }
 
     /**

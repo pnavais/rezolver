@@ -50,8 +50,20 @@ public class FallbackLoader implements IResourceLoader {
      * @param loader the resource loader to wrap
      */
     public FallbackLoader(IResourceLoader loader) {
+        this(loader, null);
+    }
+
+    /**
+     * Creates a @{@link FallbackLoader} wrapping
+     * a given resource loader and using the specified
+     * fallback path.
+     *
+     * @param loader the resource loader to wrap
+     */
+    public FallbackLoader(IResourceLoader loader, String fallbackPath) {
         requireNonNull(loader);
         this.loader = loader;
+        this.fallbackPath = fallbackPath;
     }
 
     /**
@@ -70,7 +82,7 @@ public class FallbackLoader implements IResourceLoader {
         resource = this.loader.resolve(location);
 
         // Last resort, try to resolve it using the fallback path
-        if (resource == null) {
+        if (!resource.isResolved()) {
             if ((fallbackPath != null) && (!location.startsWith(fallbackPath))) {
                 resource = this.loader.resolve(applyFallback(location));
             }

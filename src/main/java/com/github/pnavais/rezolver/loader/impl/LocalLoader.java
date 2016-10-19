@@ -43,13 +43,6 @@ public class LocalLoader extends URL_Loader implements IFileSystemLoader {
      * Constructor with default fallback path.
      */
     public LocalLoader() {
-    }
-
-    /**
-     * Constructor with default application path
-     * as fallback path for resolution purposes.
-     */
-    public LocalLoader(String path) {
         fileSystem  = FileSystems.getDefault();
     }
 

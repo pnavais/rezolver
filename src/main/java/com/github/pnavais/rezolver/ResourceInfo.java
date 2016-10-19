@@ -17,6 +17,7 @@
 package com.github.pnavais.rezolver;
 
 import java.net.URL;
+import java.util.Arrays;
 
 import static java.util.Objects.requireNonNull;
 
@@ -124,9 +125,7 @@ public class ResourceInfo {
      * @return the resource info
      */
     public static ResourceInfo notSolved(String location) {
-        ResourceInfo info = new ResourceInfo();
-        info.setSearchPath(location);
-        return info;
+        return solved(location, null);
     }
 
     /**
@@ -141,6 +140,11 @@ public class ResourceInfo {
         info.setSearchPath(location);
         info.setURL(resURL);
         info.setResolved(resURL!=null);
+        String source = Arrays.stream(Thread.currentThread().getStackTrace())
+                .skip(1)
+                .filter(st -> !st.getClassName().equals(ResourceInfo.class.getName()))
+                .findFirst().map(StackTraceElement::getClassName).orElse("Unknown");
+        info.setSourceEntity(source);
         return info;
     }
 
@@ -156,4 +160,13 @@ public class ResourceInfo {
         return (resourceURL != null) ? solved(resourcePath, resourceURL) : notSolved(resourcePath);
     }
 
+    @Override
+    public String toString() {
+        return "ResourceInfo{" +
+                "searchPath='" + searchPath + '\'' +
+                ", isResolved=" + isResolved +
+                ", url=" + url +
+                ", sourceEntity='" + sourceEntity + '\'' +
+                '}';
+    }
 }
