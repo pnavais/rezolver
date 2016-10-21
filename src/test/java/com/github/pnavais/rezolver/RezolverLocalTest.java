@@ -19,7 +19,6 @@ package com.github.pnavais.rezolver;
 import com.github.pnavais.rezolver.loader.impl.ClasspathLoader;
 import com.github.pnavais.rezolver.loader.impl.FallbackLoader;
 import com.github.pnavais.rezolver.loader.impl.LocalLoader;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -202,6 +201,8 @@ public class RezolverLocalTest extends RezolverBaseTest {
     public void contextCheckUnresolvedTest() {
         ResourceInfo ctx = Rezolver.fetch("/tmp/fs_resource.nfo");
         assertNotNull("Error retrieving the resolution context", ctx);
+        assertNotNull("Error retrieving search path", ctx.getSearchPath());
+        assertEquals("Search path mismatch", "/tmp/fs_resource.nfo", ctx.getSearchPath());
         assertNull("Resource resolution mismatch.Wrong URL", ctx.getURL());
         assertFalse("Resource resolution status error", ctx.isResolved());
         assertNotNull("Source entity not retrieved correctly", ctx.getSourceEntity());

@@ -20,7 +20,6 @@ import com.github.pnavais.rezolver.ResourceInfo;
 import com.github.pnavais.rezolver.loader.IFileSystemLoader;
 
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.*;
 

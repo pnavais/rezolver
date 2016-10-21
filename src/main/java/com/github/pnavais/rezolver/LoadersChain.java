@@ -18,7 +18,9 @@ package com.github.pnavais.rezolver;
 
 import com.github.pnavais.rezolver.loader.IResourceLoader;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Objects.requireNonNull;
