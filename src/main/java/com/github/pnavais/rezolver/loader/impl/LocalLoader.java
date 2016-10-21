@@ -105,23 +105,4 @@ public class LocalLoader extends URL_Loader implements IFileSystemLoader {
         this.fileSystem = fileSystem;
     }
 
-    /**
-     * Retrieves the running path in string format or
-     * null if not able to compute it correctly.
-     *
-     * Due to UNC file path issues the recommended way
-     * for conversions is URL -> URI -> Path.
-     *
-     * @return the running path or null if not found
-     */
-    @Override
-    public String getRunningPath() {
-        String path = "";
-        try {
-            path = LocalLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString();
-        } catch (URISyntaxException e) {
-        }
-        return path;
-    }
-
 }

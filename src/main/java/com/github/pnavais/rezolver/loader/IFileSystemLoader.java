@@ -39,15 +39,4 @@ public interface IFileSystemLoader extends IURL_Loader {
      */
     void setFileSystem(FileSystem fileSystem);
 
-    /**
-     * Retrieves the running path in string format or
-     * null if not able to compute it correctly.
-     *
-     * Due to UNC file path issues the recommended way
-     * for conversions is URL -> URI -> Path.
-     *
-     * @return the running path or null if not found
-     */
-    String getRunningPath();
-
 }

@@ -19,6 +19,7 @@ package com.github.pnavais.rezolver;
 import com.github.pnavais.rezolver.loader.impl.ClasspathLoader;
 import com.github.pnavais.rezolver.loader.impl.FallbackLoader;
 import com.github.pnavais.rezolver.loader.impl.LocalLoader;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -195,6 +196,16 @@ public class RezolverLocalTest extends RezolverBaseTest {
                 fail("Error reading lines from file");
             }
         });
+    }
+
+    @Test
+    public void contextCheckUnresolvedTest() {
+        ResourceInfo ctx = Rezolver.fetch("/tmp/fs_resource.nfo");
+        assertNotNull("Error retrieving the resolution context", ctx);
+        assertNull("Resource resolution mismatch.Wrong URL", ctx.getURL());
+        assertFalse("Resource resolution status error", ctx.isResolved());
+        assertNotNull("Source entity not retrieved correctly", ctx.getSourceEntity());
+        assertEquals("Source entity mismatch", "Unknown", ctx.getSourceEntity());
     }
 
 }

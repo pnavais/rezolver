@@ -24,8 +24,7 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-        RezolverLocalTest.class,
-        RezolverContextTest.class
+        RezolverLocalTest.class
 })
 public class RezolverTestSuite {
 }
