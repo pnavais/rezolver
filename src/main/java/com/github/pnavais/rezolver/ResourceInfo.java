@@ -165,13 +165,4 @@ public class ResourceInfo {
                 .findFirst().map(StackTraceElement::getClassName).orElse("Unknown");
     }
 
-    @Override
-    public String toString() {
-        return "ResourceInfo{" +
-                "searchPath='" + searchPath + '\'' +
-                ", isResolved=" + isResolved +
-                ", url=" + url +
-                ", sourceEntity='" + sourceEntity + '\'' +
-                '}';
-    }
 }
