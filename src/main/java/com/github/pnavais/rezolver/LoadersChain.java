@@ -32,13 +32,13 @@ public class LoadersChain {
     /**
      * The Loaders chain.
      */
-    private Collection<IResourceLoader> loadersChain;
+    private Collection<IResourceLoader> chain;
 
     /**
      * Instantiates a new Loaders chain.
      */
     public LoadersChain() {
-        this.loadersChain = new ArrayDeque<>();
+        this.chain = new ArrayDeque<>();
     }
 
     /**
@@ -48,7 +48,7 @@ public class LoadersChain {
      */
     public LoadersChain(Collection<IResourceLoader> loadersChain) {
         requireNonNull(loadersChain);
-        this.loadersChain = loadersChain;
+        this.chain = loadersChain;
     }
 
     /**
@@ -57,16 +57,7 @@ public class LoadersChain {
      * @param loader the loader to add
      */
     public void add(IResourceLoader loader) {
-        this.loadersChain.add(loader);
-    }
-
-    /**
-     * Retrieves the loaders chain
-     *
-     * @return the loaders chain
-     */
-    public Collection<IResourceLoader> getLoadersChain() {
-        return loadersChain;
+        this.chain.add(loader);
     }
 
     /**
@@ -88,7 +79,7 @@ public class LoadersChain {
      */
     public ResourceInfo process(String resourcePath) {
         final AtomicReference<ResourceInfo> ref = new AtomicReference<>();
-        Optional.ofNullable(loadersChain).ifPresent(chain -> chain.stream().filter(l -> {
+        Optional.ofNullable(chain).ifPresent(chain -> chain.stream().filter(l -> {
             ref.set(l.resolve(resourcePath));
             return ref.get().isResolved();
         }).findFirst());
@@ -100,6 +91,6 @@ public class LoadersChain {
      * Clears the list of loaders
      */
     public void clear() {
-        Optional.ofNullable(this.loadersChain).ifPresent(Collection::clear);
+        Optional.ofNullable(this.chain).ifPresent(Collection::clear);
     }
 }

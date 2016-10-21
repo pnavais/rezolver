@@ -19,8 +19,6 @@ package com.github.pnavais.rezolver;
 import java.net.URL;
 import java.util.Arrays;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * A {@link ResourceInfo} is a basic container to store the resolved
  * URL of the resource, the resolution status and any arbitrary data
