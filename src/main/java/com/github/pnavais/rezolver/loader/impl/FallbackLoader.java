@@ -17,9 +17,9 @@
 package com.github.pnavais.rezolver.loader.impl;
 
 import com.github.pnavais.rezolver.ResourceInfo;
+import com.github.pnavais.rezolver.loader.IFileSystemLoader;
 import com.github.pnavais.rezolver.loader.IResourceLoader;
-
-import java.util.Optional;
+import com.github.pnavais.rezolver.loader.IURL_Loader;
 
 import static java.util.Objects.requireNonNull;
 
@@ -42,28 +42,15 @@ public class FallbackLoader implements IResourceLoader {
     /** The location info to append in case resolution failed */
     protected String fallbackPath;
 
-
     /**
      * Creates a @{@link FallbackLoader} wrapping
      * a given resource loader.
      *
      * @param loader the resource loader to wrap
      */
-    public FallbackLoader(IResourceLoader loader) {
-        this(loader, null);
-    }
-
-    /**
-     * Creates a @{@link FallbackLoader} wrapping
-     * a given resource loader and using the specified
-     * fallback path.
-     *
-     * @param loader the resource loader to wrap
-     */
-    public FallbackLoader(IResourceLoader loader, String fallbackPath) {
+     public FallbackLoader(IResourceLoader loader) {
         requireNonNull(loader);
         this.loader = loader;
-        this.fallbackPath = fallbackPath;
     }
 
     /**
@@ -102,11 +89,26 @@ public class FallbackLoader implements IResourceLoader {
     protected String applyFallback(String location) {
         requireNonNull(location);
 
-        return fallbackPath
-                + ((this.loader instanceof IFileSystemLoader)
-                    ? ((IFileSystemLoader) this.loader).getPathSeparator()
-                    : DEFAULT_PATH_SEPARATOR)
-                + location;
+        String prefix = fallbackPath + getSeparator();
+
+        // Rearrange the scheme in case of URL Loaders
+        if (this.loader instanceof IURL_Loader) {
+            location = ((IURL_Loader) this.loader).stripScheme(location);
+            prefix = ((IURL_Loader) this.loader).getURL_Scheme() + ":" + prefix;
+        }
+
+        return prefix + location;
+    }
+
+    /**
+     * Retrieves the separator
+     *
+     * @return the separator
+     */
+    protected String getSeparator() {
+        return ((this.loader instanceof IFileSystemLoader)
+                ? ((IFileSystemLoader) this.loader).getPathSeparator()
+                : DEFAULT_PATH_SEPARATOR);
     }
 
     /**
@@ -118,6 +120,22 @@ public class FallbackLoader implements IResourceLoader {
     public void setFallbackPath(String fallbackPath) {
         requireNonNull(fallbackPath);
         this.fallbackPath= fallbackPath;
+    }
+
+    /**
+     * Creates a new fallback loader with the given fallback
+     * path.
+     *
+     * @param loader the resource loader to wrap
+     * @param fallbackPath the fallback path
+     * @return the fallback loader of the given resource loader
+     */
+    public static FallbackLoader of(IResourceLoader loader, String fallbackPath) {
+        requireNonNull(loader);
+        requireNonNull(fallbackPath);
+        FallbackLoader fbl = new FallbackLoader(loader);
+        fbl.setFallbackPath(fallbackPath);
+        return fbl;
     }
 
 }

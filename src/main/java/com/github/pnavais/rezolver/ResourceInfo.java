@@ -140,11 +140,7 @@ public class ResourceInfo {
         info.setSearchPath(location);
         info.setURL(resURL);
         info.setResolved(resURL!=null);
-        String source = Arrays.stream(Thread.currentThread().getStackTrace())
-                .skip(1)
-                .filter(st -> !st.getClassName().equals(ResourceInfo.class.getName()))
-                .findFirst().map(StackTraceElement::getClassName).orElse("Unknown");
-        info.setSourceEntity(source);
+        info.setSourceEntity(info.isResolved() ? info.lookupSourceEntity() : "Unknown");
         return info;
     }
 
@@ -158,6 +154,17 @@ public class ResourceInfo {
      */
     public static ResourceInfo from(String resourcePath, URL resourceURL) {
         return (resourceURL != null) ? solved(resourcePath, resourceURL) : notSolved(resourcePath);
+    }
+
+    /**
+     * Lookup in the thread stack for the caller's class name
+     * @return the caller's class name
+     */
+    private String lookupSourceEntity() {
+        return Arrays.stream(Thread.currentThread().getStackTrace())
+                .skip(1)
+                .filter(st -> !st.getClassName().equals(this.getClass().getName()))
+                .findFirst().map(StackTraceElement::getClassName).orElse("Unknown");
     }
 
     @Override

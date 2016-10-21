@@ -31,15 +31,15 @@ import static org.junit.Assert.*;
  */
 public class RezolverContextTest extends RezolverBaseTest {
 
-   /* @Test
+    @Test
     public void contextCheckUnresolvedTest() {
-        Context ctx = Rezolver.resolveCtx("/tmp/fs_resource.nfo");
+        ResourceInfo ctx = Rezolver.fetch("/tmp/fs_resource.nfo");
         assertNotNull("Error retrieving the resolution context", ctx);
-        assertNull("Resource resolution mismatch.Wrong URL", ctx.getResURL());
+        assertNull("Resource resolution mismatch.Wrong URL", ctx.getURL());
         assertFalse("Resource resolution status error", ctx.isResolved());
-        assertNull("Source entity incorrect", ctx.getSourceEntity());
+        assertNotNull("Source entity incorrect", ctx.getSourceEntity());
     }
-
+/*
     @Test
     public void contextCheckResolvedTest() {
         Rezolver rezolver = Rezolver.withLoader(localLoader).build();

@@ -70,7 +70,7 @@ public class Rezolver
 
     /** The default loaders chain */
     public static LoadersChain DEFAULT_CHAIN = LoadersChain.from(Arrays.asList(new LocalLoader(),
-                                                                               new ClasspathLoader(),
+                                                                               FallbackLoader.of(new ClasspathLoader(), "META-INF"),
                                                                                new RemoteLoader()));
 
     /**
@@ -157,7 +157,7 @@ public class Rezolver
         public RezolverBuilder add(IResourceLoader loader, String fallbackPath) {
             requireNonNull(loader);
             requireNonNull(fallbackPath);
-            instance.loadersChain.add(new FallbackLoader(loader, fallbackPath));
+            instance.loadersChain.add(FallbackLoader.of(loader, fallbackPath));
             return this;
         }
 
@@ -210,9 +210,19 @@ public class Rezolver
      * @param resourcePath the path to a resource
      * @return the resolved URL or null if not resolved
      */
-    public static ResourceInfo lookup(String resourcePath) {
-        return RezolverHolder.instance.resolve(resourcePath);
+    public static URL lookup(String resourcePath) {
+        return fetch(resourcePath).getURL();
+    }
 
+    /**
+     * Retrieve the Resource Information for a given resourcePath
+     * using the resolver chain.
+     *
+     * @param resourcePath the path to a resource
+     * @return the resolved URL or null if not resolved
+     */
+    public static ResourceInfo fetch(String resourcePath) {
+        return RezolverHolder.instance.resolve(resourcePath);
     }
 
 }

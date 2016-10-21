@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.pnavais.rezolver.loader.impl;
+package com.github.pnavais.rezolver.loader;
 
 import java.nio.file.FileSystem;
 
@@ -22,7 +22,7 @@ import java.nio.file.FileSystem;
  * Common interface for resource loaders working with
  * file custom file systems.
  */
-public interface IFileSystemLoader {
+public interface IFileSystemLoader extends IURL_Loader {
 
     /**
      * Retrieves the path separator

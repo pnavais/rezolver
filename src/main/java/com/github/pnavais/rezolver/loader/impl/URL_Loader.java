@@ -18,6 +18,7 @@ package com.github.pnavais.rezolver.loader.impl;
 
 import com.github.pnavais.rezolver.ResourceInfo;
 import com.github.pnavais.rezolver.loader.IResourceLoader;
+import com.github.pnavais.rezolver.loader.IURL_Loader;
 
 /**
  * <b>FallbackLoader</b>
@@ -26,7 +27,7 @@ import com.github.pnavais.rezolver.loader.IResourceLoader;
  *     in case the resolution failed.
  * </p>
  */
-public abstract class URL_Loader implements IResourceLoader {
+public abstract class URL_Loader implements IURL_Loader, IResourceLoader {
 
     /**
      * Use the default loader resolution algorithm and
@@ -42,19 +43,19 @@ public abstract class URL_Loader implements IResourceLoader {
 
         // Try to resolve without schema prefix
         if ((!resourceInfo.isResolved()) && (location.startsWith(getURL_Scheme()))) {
-            resourceInfo = lookup(location.replaceFirst("^"+getURL_Scheme()+":", ""));
+            resourceInfo = lookup(stripScheme(location));
         }
 
         return resourceInfo;
     }
 
+    /**
+     * Perform a lookup of the resource in the given location.
+     *
+     * @param location the resource's location
+     * @return the resource information
+     */
     public abstract ResourceInfo lookup(String location);
 
-    /**
-     * Retrieves the URL schema
-     *
-     * @return the URL schema
-     */
-    public abstract String getURL_Scheme();
 
 }
