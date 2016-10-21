@@ -20,6 +20,8 @@ import com.github.pnavais.rezolver.ResourceInfo;
 import com.github.pnavais.rezolver.loader.IResourceLoader;
 import com.github.pnavais.rezolver.loader.IURL_Loader;
 
+import java.net.URL;
+
 /**
  * <b>FallbackLoader</b>
  * <p>
@@ -39,14 +41,14 @@ public abstract class URL_Loader implements IURL_Loader, IResourceLoader {
     @Override
     public ResourceInfo resolve(String location) {
         // Try direct resolution
-        ResourceInfo resourceInfo = lookup(location);
+         URL resourceURL = lookup(location);
 
         // Try to resolve without schema prefix
-        if ((!resourceInfo.isResolved()) && (location.startsWith(getURL_Scheme()))) {
-            resourceInfo = lookup(stripScheme(location));
+        if ((resourceURL==null) && (location.startsWith(getURL_Scheme()))) {
+            resourceURL = lookup(stripScheme(location));
         }
 
-        return resourceInfo;
+        return ResourceInfo.builder().with(location).as(resourceURL).from(getClass().getSimpleName()).build();
     }
 
     /**
@@ -55,7 +57,7 @@ public abstract class URL_Loader implements IURL_Loader, IResourceLoader {
      * @param location the resource's location
      * @return the resource information
      */
-    public abstract ResourceInfo lookup(String location);
+    public abstract URL lookup(String location);
 
 
 }

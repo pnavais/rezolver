@@ -108,14 +108,14 @@ public class RezolverLocalTest extends RezolverBaseTest {
         ResourceInfo rezInfo = r.resolve("dup_resource.nfo");
         assertNotNull("Error resolving the resource", rezInfo);
         assertNotNull("Error retrieving the URL", rezInfo.getURL());
-        assertEquals("Resource resolution mismatch", ClasspathLoader.class.getName(), rezInfo.getSourceEntity());
+        assertEquals("Resource resolution mismatch", ClasspathLoader.class.getSimpleName(), rezInfo.getSourceEntity());
 
         // Use a fallback path
         fallbackLoader.setFallbackPath("/tmp/");
         ResourceInfo dupRes = r.resolve("dup_resource.nfo");
         assertNotNull("Error resolving the resource", dupRes);
         assertNotNull("Error retrieving the context", dupRes.getURL());
-        assertEquals("Resource resolution mismatch", LocalLoader.class.getName(), dupRes.getSourceEntity());
+        assertEquals("Resource resolution mismatch", LocalLoader.class.getSimpleName(), dupRes.getSourceEntity());
     }
 
     @Test

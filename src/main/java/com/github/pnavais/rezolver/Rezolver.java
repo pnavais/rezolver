@@ -26,7 +26,6 @@ import com.github.pnavais.rezolver.loader.impl.RemoteLoader;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -105,9 +104,7 @@ public class Rezolver
      * @return the resolved URL
      */
     public ResourceInfo resolve(String resourcePath) {
-        return Optional.ofNullable(this.loadersChain)
-                .map(loaders -> loaders.process(resourcePath))
-                .orElseGet(() -> ResourceInfo.notSolved(resourcePath));
+        return loadersChain.process(resourcePath);
     }
 
     /**
@@ -177,7 +174,6 @@ public class Rezolver
         public Rezolver build() { return instance; }
 
     }
-
 
     /**
      * Creates a new rezolver builder

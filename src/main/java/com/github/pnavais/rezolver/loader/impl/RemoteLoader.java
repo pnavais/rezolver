@@ -18,6 +18,8 @@ package com.github.pnavais.rezolver.loader.impl;
 
 import com.github.pnavais.rezolver.ResourceInfo;
 
+import java.net.URL;
+
 /**
  * <b>RemoteLoader</b>
  * <p>
@@ -40,8 +42,8 @@ public class RemoteLoader extends URL_Loader {
      * @return the URL to the resource
      */
     @Override
-    public ResourceInfo lookup(String location) {
-        return ResourceInfo.notSolved(location);
+    public URL lookup(String location) {
+        return null;
     }
 
     /**

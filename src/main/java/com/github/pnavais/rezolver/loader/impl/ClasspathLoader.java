@@ -16,8 +16,6 @@
 
 package com.github.pnavais.rezolver.loader.impl;
 
-import com.github.pnavais.rezolver.ResourceInfo;
-
 import java.net.URL;
 
 import static java.util.Objects.requireNonNull;
@@ -59,7 +57,7 @@ public class ClasspathLoader extends URL_Loader {
      * @return the URL of the resource
      */
     @Override
-    public ResourceInfo lookup(String resourcePath) {
+    public URL lookup(String resourcePath) {
         // Check the resource in the same class loader
         URL resourceURL = classLoader.getResource(resourcePath);
 
@@ -68,7 +66,7 @@ public class ClasspathLoader extends URL_Loader {
             resourceURL = ClassLoader.getSystemResource(resourcePath);
         }
 
-        return ResourceInfo.from(resourcePath,resourceURL);
+        return resourceURL;
     }
 
     /**

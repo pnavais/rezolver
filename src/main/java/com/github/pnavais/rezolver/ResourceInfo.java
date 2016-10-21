@@ -17,7 +17,7 @@
 package com.github.pnavais.rezolver;
 
 import java.net.URL;
-import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * A {@link ResourceInfo} is a basic container to store the resolved
@@ -37,6 +37,13 @@ public class ResourceInfo {
 
     /** The source entity that resolved the resource */
     private String sourceEntity;
+
+    /**
+     * This class is kept private to
+     * avoid instantiation. The builder
+     * must be used.
+     */
+    private ResourceInfo() { }
 
     /**
      * Sets the search path
@@ -116,53 +123,66 @@ public class ResourceInfo {
     }
 
     /**
-     * Creates a new @{@link ResourceInfo} with no
-     * resolution status for the given location
-     *
-     * @param location the location to search
-     * @return the resource info
+     * A builder for the resource info
      */
-    public static ResourceInfo notSolved(String location) {
-        return solved(location, null);
+    public static class ResourceInfoBuilder {
+
+        /** The builder instance */
+        private ResourceInfo instance = new ResourceInfo();
+
+        /**
+         * Retrieves the configured resource info instance
+         * @return the resource info instance
+         */
+        public ResourceInfo build() {
+            return instance;
+        }
+
+        /**
+         * Sets the search path of the resource info
+         *
+         * @param location the search path to look for
+         * @return the resource info builder
+         */
+        public ResourceInfoBuilder with(String location) {
+            instance.setSearchPath(location);
+            return this;
+        }
+
+        /**
+         * Sets the URL of the resource. If null
+         * the resource is considered as not
+         * resolved.
+         *
+         * @param resourceURL the resource's URL
+         * @return the resource info builder
+         */
+        public ResourceInfoBuilder as(URL resourceURL) {
+            instance.setURL(resourceURL);
+            instance.setResolved(resourceURL!=null);
+            instance.setSourceEntity("Unknown");
+            return this;
+        }
+
+        /**
+         * Sets the source entity of the resource
+         * in case the resource is resolved.
+         *
+         * @param sourceEntity the source entity
+         * @return the resource info builder
+         */
+        public ResourceInfoBuilder from(String sourceEntity) {
+            instance.setSourceEntity(instance.isResolved() ? sourceEntity : "Unknown");
+            return this;
+        }
     }
 
     /**
-     * Creates a new @{@link ResourceInfo} with no
-     * resolution status for the given location
+     * Creates a new resource info builder
      *
-     * @param location the location to search
-     * @return the resource info
+     * @return the resource info builder
      */
-    public static ResourceInfo solved(String location, URL resURL) {
-        ResourceInfo info = new ResourceInfo();
-        info.setSearchPath(location);
-        info.setURL(resURL);
-        info.setResolved(resURL!=null);
-        info.setSourceEntity(info.isResolved() ? info.lookupSourceEntity() : "Unknown");
-        return info;
+    public static ResourceInfoBuilder builder() {
+        return new ResourceInfoBuilder();
     }
-
-    /**
-     * Creates a new @{@link ResourceInfo} from the
-     * supplied resource information.
-     *
-     * @param resourcePath the requested resource location
-     * @param resourceURL the resolved resource URL
-     * @return the resource info
-     */
-    public static ResourceInfo from(String resourcePath, URL resourceURL) {
-        return (resourceURL != null) ? solved(resourcePath, resourceURL) : notSolved(resourcePath);
-    }
-
-    /**
-     * Lookup in the thread stack for the caller's class name
-     * @return the caller's class name
-     */
-    private String lookupSourceEntity() {
-        return Arrays.stream(Thread.currentThread().getStackTrace())
-                .skip(1)
-                .filter(st -> !st.getClassName().equals(this.getClass().getName()))
-                .findFirst().map(StackTraceElement::getClassName).orElse("Unknown");
-    }
-
 }

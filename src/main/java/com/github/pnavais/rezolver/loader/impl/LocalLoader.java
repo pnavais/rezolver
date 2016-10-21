@@ -54,7 +54,7 @@ public class LocalLoader extends URL_Loader implements IFileSystemLoader {
      * @return the URL to the resource
      */
     @Override
-    public ResourceInfo lookup(String location) {
+    public URL lookup(String location) {
         URL resourceURL = null;
         try {
             if (location != null) {
@@ -69,7 +69,7 @@ public class LocalLoader extends URL_Loader implements IFileSystemLoader {
         } catch (InvalidPathException e) {
         }
 
-        return ResourceInfo.from(location,resourceURL);
+        return resourceURL;
     }
 
     /**
