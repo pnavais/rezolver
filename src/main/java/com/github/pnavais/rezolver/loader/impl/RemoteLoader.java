@@ -16,9 +16,10 @@
 
 package com.github.pnavais.rezolver.loader.impl;
 
-import com.github.pnavais.rezolver.ResourceInfo;
-
+import java.io.InputStream;
+import java.net.Proxy;
 import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * <b>RemoteLoader</b>
@@ -28,6 +29,9 @@ import java.net.URL;
  * </p>
  */
 public class RemoteLoader extends URL_Loader {
+
+    /** The proxy */
+    private Proxy proxy = Proxy.NO_PROXY;
 
     /**
      * Private constructor to avoid external instantiation
@@ -43,7 +47,28 @@ public class RemoteLoader extends URL_Loader {
      */
     @Override
     public URL lookup(String location) {
-        return null;
+        URL resURL = null;
+        try {
+            URL url = new URL(location);
+            URLConnection yc = url.openConnection(this.proxy);
+            try (InputStream inputStream = yc.getInputStream()) {
+                if (inputStream != null) {
+                    resURL = yc.getURL();
+                }
+            }
+        } catch (Exception o) {
+        }
+
+        return resURL;
+    }
+
+    /**
+     * Sets the connection proxy
+     *
+     * @param proxy the proxy
+     */
+    public void setProxy(Proxy proxy) {
+        this.proxy = (proxy != null) ? proxy : Proxy.NO_PROXY;
     }
 
     /**
@@ -55,6 +80,5 @@ public class RemoteLoader extends URL_Loader {
     public String getURL_Scheme() {
         return "*";
     }
-
 
 }

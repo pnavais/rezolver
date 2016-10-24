@@ -16,7 +16,6 @@
 
 package com.github.pnavais.rezolver.loader.impl;
 
-import com.github.pnavais.rezolver.ResourceInfo;
 import com.github.pnavais.rezolver.loader.IFileSystemLoader;
 
 import java.net.MalformedURLException;

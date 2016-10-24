@@ -17,7 +17,6 @@
 package com.github.pnavais.rezolver;
 
 import java.net.URL;
-import java.util.Optional;
 
 /**
  * A {@link ResourceInfo} is a basic container to store the resolved

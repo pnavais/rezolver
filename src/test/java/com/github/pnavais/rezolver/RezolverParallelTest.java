@@ -41,4 +41,5 @@ public class RezolverParallelTest extends RezolverBaseTest {
             assertNotNull("Error retrieving source entity for resource"+rezName, info.getSourceEntity());
         });
     }
+
 }

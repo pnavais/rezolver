@@ -209,4 +209,14 @@ public class RezolverLocalTest extends RezolverBaseTest {
         assertEquals("Source entity mismatch", "Unknown", ctx.getSourceEntity());
     }
 
+
+    /*@Test
+    public void resolveRemoteFileTest() {
+        String res = "https://cdn.playbuzz.com/cdn/ff5518e9-2c0b-493c-a98b-ef75604208fa/7ad4bf13-3df8-4167-8111-2691fe20c79a.jpg";
+        RemoteLoader loader = new RemoteLoader();
+        loader.setProxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("ptmproxy.gmv.es", 80)));
+        URL resURL = Rezolver.builder().add(loader).build().resolve(res).getURL();
+        Assert.assertNotNull("Error retrieving remote URL", resURL);
+    }*/
+
 }
