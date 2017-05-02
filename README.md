@@ -27,7 +27,7 @@ arbitrary resource specified using a string URL that can be either relative
 or absolute containing optionally a full valid schema.
 </p>
 Examples of possible URLs :
-<p><code>
+<code>
 <ul>
 <li>"/home/pnavais/myfile.nfo"</li>
 <li>"file:///C:/Users/pnavais/test/image.png"</li>
@@ -35,7 +35,6 @@ Examples of possible URLs :
 <li>"https://github.com/pnavais/rezolver/"</li>
 </ul>
 </code>
-</p>
 
 ```Java
 ResourceInfo resInfo = Rezolver.fetch("/home/pnavais/images/image.png"); // --> Will resolve to file system
@@ -44,7 +43,7 @@ resInfo.isResolved();    // --> True
 resInfo.getSearchPath(); // --> /home/pnavais/images/image.png
 resInfo.getURL();        // --> file:///home/pnavais/images/image.png
 
-ResourceInfo classpathRes = Rezolver.fetch("images/inner-image.png");  // --> Will resolve to META-INF/images/image.png if path cannot be found 
+ResourceInfo classpathRes = Rezolver.fetch("images/inner-image.png");  // --> Will resolve to META-INF/images/inner-image.png if path cannot be found 
 
 // Get URL of resource directly
 URL resURL = Rezolver.lookup("image.png");
