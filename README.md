@@ -26,16 +26,13 @@ Rezolver will try to do its best to resolve the correct URL of any
 arbitrary resource specified using a string URL that can be either relative
 or absolute containing optionally a full valid schema.
 </p>
-Examples of possible URLs :
-<code>
+Examples of possible URLs :<code>
 <ul>
 <li>"/home/pnavais/myfile.nfo"</li>
 <li>"file:///C:/Users/pnavais/test/image.png"</li>
 <li>"classpath:/META-INF/resource.xml"</li>
 <li>"https://github.com/pnavais/rezolver/"</li>
-</ul>
-</code>
-
+</ul></code>
 ```Java
 ResourceInfo resInfo = Rezolver.fetch("/home/pnavais/images/image.png"); // --> Will resolve to file system
 
