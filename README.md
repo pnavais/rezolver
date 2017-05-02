@@ -27,13 +27,14 @@ arbitrary resource specified using a string URL that can be either relative
 or absolute containing optionally a full valid schema.
 </p>
 Examples of possible URLs :
+<p>
 ```
 "/home/pnavais/myfile.nfo"
 "file:///C:/Users/pnavais/test/image.png"
 "classpath:/META-INF/resource.xml"
 "https://github.com/pnavais/rezolver/"
 ```
-
+</p>
 ```Java
 Rezolver.resolve("/home/pnavais/images/image.png"); // --> Will resolve to file system
 Rezolver.resolve("images/image.png");               // --> Will resolve to META-INF/images/image.png if path cannot be found 
