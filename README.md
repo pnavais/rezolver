@@ -35,9 +35,9 @@ Examples of possible URLs :
 </ul>
 </code>
 
-```
-Rezolver.resolve("images/image.png"); // --> Will retrieve META-INF/images/image.png if the path cannot be found relative to the
-current runtime one
+```Java
+Rezolver.resolve("/home/pnavais/images/image.png"); --> Will resolve to file system
+Rezolver.resolve("images/image.png"); // --> Will resolve to META-INF/images/image.png if path cannot be found 
 ```
 
 In order to retrieve the resolved URL of a given resource, Rezolver will use
