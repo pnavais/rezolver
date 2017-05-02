@@ -27,15 +27,24 @@ arbitrary resource specified using a string URL that can be either relative
 or absolute containing optionally a full valid schema.
 </p>
 Examples of possible URLs :
-<p>
-"/home/pnavais/myfile.nfo"
-"file:///C:/Users/pnavais/test/image.png"
-"classpath:/META-INF/resource.xml"
-"https://github.com/pnavais/rezolver/"
-
+<p><code>
+<ul>
+<li>"/home/pnavais/myfile.nfo"</li>
+<li>"file:///C:/Users/pnavais/test/image.png"</li>
+<li>"classpath:/META-INF/resource.xml"</li>
+<li>"https://github.com/pnavais/rezolver/"</li>
+</code>
 ```Java
-Rezolver.resolve("/home/pnavais/images/image.png"); // --> Will resolve to file system
-Rezolver.resolve("images/image.png");               // --> Will resolve to META-INF/images/image.png if path cannot be found 
+ResourceInfo resInfo = Rezolver.fetch("/home/pnavais/images/image.png"); // --> Will resolve to file system
+
+resInfo.isResolved();    // --> True
+resInfo.getSearchPath(); // --> /home/pnavais/images/image.png
+resInfo.getURL();        // --> file:///home/pnavais/images/image.png
+
+ResourceInfo classpathRes = Rezolver.fetch("images/inner-image.png");  // --> Will resolve to META-INF/images/image.png if path cannot be found 
+
+// Get URL of resource directly
+URL resURL = Rezolver.lookup("image.png");
 ```
 
 In order to retrieve the resolved URL of a given resource, Rezolver will use
