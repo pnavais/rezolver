@@ -20,24 +20,23 @@
 
 <p align="center"><sup><strong>Simple resource locator for Java 8</strong></sup></p>
 
-<p><i>Tries to resolve the location of a given resource using a chain of loaders.</i></p>
+<p><i><b>Tries to resolve the location of a given resource using a chain of loaders.</b></i></p>
 <p>
 Rezolver will try to do its best to resolve the correct URL of any
 arbitrary resource specified using a string URL that can be either relative
 or absolute containing optionally a full valid schema.
 </p>
 Examples of possible URLs :
-<code><ul>
-<li>"/home/pnavais/myfile.nfo"</li>
-<li>"file:///C:/Users/pnavais/test/image.png"</li>
-<li>"classpath:/META-INF/resource.xml"</li>
-<li>"https://github.com/pnavais/rezolver/"</li>
-</ul>
-</code>
+```
+"/home/pnavais/myfile.nfo"
+"file:///C:/Users/pnavais/test/image.png"
+"classpath:/META-INF/resource.xml"
+"https://github.com/pnavais/rezolver/"
+```
 
 ```Java
-Rezolver.resolve("/home/pnavais/images/image.png"); --> Will resolve to file system
-Rezolver.resolve("images/image.png"); // --> Will resolve to META-INF/images/image.png if path cannot be found 
+Rezolver.resolve("/home/pnavais/images/image.png"); // --> Will resolve to file system
+Rezolver.resolve("images/image.png");               // --> Will resolve to META-INF/images/image.png if path cannot be found 
 ```
 
 In order to retrieve the resolved URL of a given resource, Rezolver will use
