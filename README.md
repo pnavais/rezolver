@@ -22,7 +22,7 @@
 
 <p><i>Tries to resolve the location of a given resource using a chain of loaders.</i></p>
 <p>
-Rezolver will try to do it's best to resolve the correct URL of any
+Rezolver will try to do its best to resolve the correct URL of any
 arbitrary resource specified using a string URL that can be either relative
 or absolute containing optionally a full valid schema.
 </p>
