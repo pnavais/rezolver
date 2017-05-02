@@ -33,7 +33,10 @@ Examples of possible URLs :
 <li>"file:///C:/Users/pnavais/test/image.png"</li>
 <li>"classpath:/META-INF/resource.xml"</li>
 <li>"https://github.com/pnavais/rezolver/"</li>
+</ul>
 </code>
+</p>
+
 ```Java
 ResourceInfo resInfo = Rezolver.fetch("/home/pnavais/images/image.png"); // --> Will resolve to file system
 
