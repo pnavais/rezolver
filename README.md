@@ -20,7 +20,7 @@
 
 <p align="center"><sup><strong>Simple resource locator for Java 8</strong></sup></p>
 
-<p><i><b>Tries to resolve the location of a given resource using a chain of loaders.</b></i></p>
+<p><i><b>Resolves the location of a given resource using a chain of loaders.</b></i></p>
 <p>
 Rezolver will try to do its best to resolve the correct URL of any
 arbitrary resource specified using a string URL that can be either relative
