@@ -52,6 +52,17 @@ a default chain of loaders performing the following steps :
     to the current application runtime path.</li>
 <li>Use a remote loader to check if the specified resource location string refers to a valid URL</li>
 </ol>
+
+<h2>Creating a custom chain of loaders</h2>
+
+Use the ResourceBuilder to customize the loaders resolution chain :
+```Java
+// A custom chain looking first locally and in the classpath in case of failure (using META-INF as fallback folder)
+Rezolver r = Rezolver.builder()
+                .add(new LocalLoader())
+                .add(FallbackLoader.of(new ClasspathLoader(), "META-INF")))
+                .build();
+```
 ---
 
 
