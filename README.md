@@ -57,7 +57,7 @@ a default chain of loaders performing the following steps :
 
 Use the ResourceBuilder to customize the loaders resolution chain :
 ```Java
-// A custom chain looking first locally and in the classpath in case of failure (using META-INF/resources as fallback folder)
+// A custom chain looking first locally and later in the classpath in case of failure (META-INF/resources is used as fallback folder)
 Rezolver r = Rezolver.builder()
                      .add(new LocalLoader())
                      .add(FallbackLoader.of(new ClasspathLoader(), "META-INF/resources")))
