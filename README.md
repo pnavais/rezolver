@@ -63,7 +63,7 @@ Rezolver r = Rezolver.builder()
                      .add(FallbackLoader.of(new ClasspathLoader(), "META-INF/resources")))
                      .build();
                      
-r.resolve("images/inner-resource.conf").getURL(); // --> Will restrieve file:///res/in/classpath/META-INF/resources/inner-resource.conf
+r.resolve("images/inner-resource.conf").getURL(); // --> Will retrieve file:///res/in/classpath/META-INF/resources/inner-resource.conf
 ```
 ---
 
