@@ -62,6 +62,7 @@ Rezolver r = Rezolver.builder()
                      .add(new LocalLoader())
                      .add(FallbackLoader.of(new ClasspathLoader(), "META-INF")))
                      .build();
+                     
 r.resolve("images/inner-image.png").getURL(); // --> Will restrieve file:///res/in/classpath/META-INF/images/inner-image.png
 ```
 ---
