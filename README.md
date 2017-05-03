@@ -28,9 +28,9 @@ or absolute containing optionally a full valid schema.
 </p>
 
 ```Java
-Rezolver.fetch("/home/pnavais/images/image.png");         // --> Resolve to file system
+Rezolver.fetch("/home/pnavais/images/image.png");         // --> Resolve from file system
 Rezolver.fetch("file:///home/pnavais/images/image.png");  // --> Same
-Rezolver.fetch("classpath:META-INF/images/image.png");    // --> Resolve to classpath resource
+Rezolver.fetch("classpath:META-INF/images/image.png");    // --> Resolve from classpath resource
 
 // Retrieve the fetched resource
 ResourceInfo resInfo = Rezolver.fetch("images/inner-image.png");  // --> Will resolve to META-INF/images/inner-image.png if path cannot be found 
