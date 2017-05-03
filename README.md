@@ -28,13 +28,16 @@ or absolute containing optionally a full valid schema.
 </p>
 
 ```Java
-ResourceInfo resInfo = Rezolver.fetch("/home/pnavais/images/image.png"); // --> Will resolve to file system
+Rezolver.fetch("/home/pnavais/images/image.png");         // --> Resolve to file system
+Rezolver.fetch("file:///home/pnavais/images/image.png");  // --> Same
+Rezolver.fetch("classpath:///META-INF/images/image.png"); // --> Resolve to classpath resource
+
+// Retrieve the fetched resource
+ResourceInfo resInfo = Rezolver.fetch("images/inner-image.png");  // --> Will resolve to META-INF/images/inner-image.png if path cannot be found 
 
 resInfo.isResolved();    // --> True
-resInfo.getSearchPath(); // --> /home/pnavais/images/image.png
-resInfo.getURL();        // --> file:///home/pnavais/images/image.png
-
-ResourceInfo classpathRes = Rezolver.fetch("images/inner-image.png");  // --> Will resolve to META-INF/images/inner-image.png if path cannot be found 
+resInfo.getSearchPath(); // --> images/inner-image.png
+resInfo.getURL();        // --> file:///res/in/classpath/META-INF/images/inner-image.png
 
 // Get URL of resource directly
 URL resURL = Rezolver.lookup("image.png");
