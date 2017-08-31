@@ -81,7 +81,7 @@ public class LoadersChain {
      */
     public ResourceInfo process(String resourcePath) {
         final AtomicReference<ResourceInfo> ref = new AtomicReference<>();
-        Optional.ofNullable(chain).ifPresent(chain -> chain.stream().filter(l -> {
+        Optional.ofNullable(chain).ifPresent(c -> c.stream().filter(l -> {
             ref.set(l.resolve(resourcePath));
             return ref.get().isResolved();
         }).findFirst());
