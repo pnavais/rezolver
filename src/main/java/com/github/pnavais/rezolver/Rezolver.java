@@ -64,7 +64,7 @@ public class Rezolver
     private LoadersChain loadersChain;
 
     /** The default loaders chain */
-    public static LoadersChain DEFAULT_CHAIN = LoadersChain.from(Arrays.asList(new LocalLoader(),
+    public static final LoadersChain DEFAULT_CHAIN = LoadersChain.from(Arrays.asList(new LocalLoader(),
                                                                                FallbackLoader.of(new ClasspathLoader(), "META-INF"),
                                                                                new RemoteLoader()));
 
