@@ -16,7 +16,7 @@
 
 package com.github.pnavais.rezolver.loader;
 
-public interface IURL_Loader {
+public interface IUrlLoader {
 
     /**
      * Retrieves the URL schema

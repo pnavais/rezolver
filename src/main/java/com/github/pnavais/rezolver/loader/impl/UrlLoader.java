@@ -19,6 +19,7 @@ package com.github.pnavais.rezolver.loader.impl;
 import com.github.pnavais.rezolver.ResourceInfo;
 import com.github.pnavais.rezolver.loader.IResourceLoader;
 import com.github.pnavais.rezolver.loader.IURL_Loader;
+import com.github.pnavais.rezolver.loader.IUrlLoader;
 
 import java.net.URL;
 
@@ -29,7 +30,7 @@ import java.net.URL;
  *     in case the resolution failed.
  * </p>
  */
-public abstract class URL_Loader implements IURL_Loader, IResourceLoader {
+public abstract class UrlLoader implements IUrlLoader, IResourceLoader {
 
     /**
      * Use the default loader resolution algorithm and
