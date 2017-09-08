@@ -18,7 +18,6 @@ package com.github.pnavais.rezolver.loader.impl;
 
 import com.github.pnavais.rezolver.ResourceInfo;
 import com.github.pnavais.rezolver.loader.IResourceLoader;
-import com.github.pnavais.rezolver.loader.IURL_Loader;
 import com.github.pnavais.rezolver.loader.IUrlLoader;
 
 import java.net.URL;
@@ -45,7 +44,7 @@ public abstract class UrlLoader implements IUrlLoader, IResourceLoader {
          URL resourceURL = lookup(location);
 
         // Try to resolve without schema prefix
-        if ((resourceURL==null) && (location.startsWith(getURL_Scheme()))) {
+        if ((resourceURL==null) && (location.startsWith(getUrlScheme()))) {
             resourceURL = lookup(stripScheme(location));
         }
 

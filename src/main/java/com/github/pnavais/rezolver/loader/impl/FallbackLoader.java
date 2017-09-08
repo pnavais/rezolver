@@ -19,7 +19,7 @@ package com.github.pnavais.rezolver.loader.impl;
 import com.github.pnavais.rezolver.ResourceInfo;
 import com.github.pnavais.rezolver.loader.IFileSystemLoader;
 import com.github.pnavais.rezolver.loader.IResourceLoader;
-import com.github.pnavais.rezolver.loader.IURL_Loader;
+import com.github.pnavais.rezolver.loader.IUrlLoader;
 
 import static java.util.Objects.requireNonNull;
 
@@ -69,10 +69,8 @@ public class FallbackLoader implements IResourceLoader {
         resource = this.loader.resolve(location);
 
         // Last resort, try to resolve it using the fallback path
-        if (!resource.isResolved()) {
-            if ((fallbackPath != null) && (!location.startsWith(fallbackPath))) {
-                resource = this.loader.resolve(applyFallback(location));
-            }
+        if (!resource.isResolved() && (fallbackPath != null) && (!location.startsWith(fallbackPath))) {
+            resource = this.loader.resolve(applyFallback(location));
         }
 
         return resource;
@@ -90,14 +88,15 @@ public class FallbackLoader implements IResourceLoader {
         requireNonNull(location);
 
         String prefix = fallbackPath + getSeparator();
+        String newLocation = location;
 
         // Rearrange the scheme in case of URL Loaders
-        if (this.loader instanceof IURL_Loader) {
-            location = ((IURL_Loader) this.loader).stripScheme(location);
-            prefix = ((IURL_Loader) this.loader).getURL_Scheme() + ":" + prefix;
+        if (this.loader instanceof IUrlLoader) {
+            newLocation = ((IUrlLoader) this.loader).stripScheme(location);
+            prefix = ((IUrlLoader) this.loader).getUrlScheme() + ":" + prefix;
         }
 
-        return prefix + location;
+        return prefix + newLocation;
     }
 
     /**

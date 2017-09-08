@@ -92,6 +92,7 @@ public class Rezolver
      * Lazy-instantiated singleton holder for the default instance
      */
     private static class RezolverHolder {
+        private RezolverHolder() { }
         private static Rezolver instance = new Rezolver(DEFAULT_CHAIN);
     }
 

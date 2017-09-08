@@ -23,7 +23,7 @@ public interface IUrlLoader {
      *
      * @return the URL schema
      */
-    String getURL_Scheme();
+    String getUrlScheme();
 
     /**
      * Removes the URL scheme from a given location
@@ -32,6 +32,6 @@ public interface IUrlLoader {
      * @return the location without URL scheme
      */
     default String stripScheme(String location) {
-        return location.replaceFirst("^"+getURL_Scheme()+":", "");
+        return location.replaceFirst("^"+ getUrlScheme()+":", "");
     }
 }

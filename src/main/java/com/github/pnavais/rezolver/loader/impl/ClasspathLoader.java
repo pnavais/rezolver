@@ -28,24 +28,15 @@ import static java.util.Objects.requireNonNull;
  *  specified resource location string and try to resolve it as last resort.
  * </p>
  */
-public class ClasspathLoader extends URL_Loader {
+public class ClasspathLoader extends UrlLoader {
 
     /** The classloader for classpath lookup */
     private ClassLoader classLoader;
 
     /**
-     * Constructor with default application path
+     * Default Constructor
      */
     public ClasspathLoader() {
-        this("META-INF");
-    }
-
-    /**
-     * Constructor with custom fallback path.
-     *
-     * @param path the path to append when resolution fails.
-     */
-    public ClasspathLoader(String path) {
         this.classLoader = getClass().getClassLoader();
     }
 
@@ -75,7 +66,7 @@ public class ClasspathLoader extends URL_Loader {
      * @return the URL scheme
      */
     @Override
-    public String getURL_Scheme() {
+    public String getUrlScheme() {
         return "classpath";
     }
 

@@ -41,7 +41,7 @@ import static org.junit.Assert.*;
 /**
  * Rezolver Local files tests
  */
-public class RezolverLocalTest extends RezolverBaseTest {
+public class RezolverLocalTest extends RezolverTestBase {
 
 
     @Test

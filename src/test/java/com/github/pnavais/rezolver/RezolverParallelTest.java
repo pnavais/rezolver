@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class RezolverParallelTest extends RezolverBaseTest {
+public class RezolverParallelTest extends RezolverTestBase {
 
     @Test
     public void resolveMultipleFilesTest() {

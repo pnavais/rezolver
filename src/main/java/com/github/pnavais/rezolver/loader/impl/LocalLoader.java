@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  *  specified resource location string and try to resolve it as last resort.
  * </p>
  */
-public class LocalLoader extends URL_Loader implements IFileSystemLoader {
+public class LocalLoader extends UrlLoader implements IFileSystemLoader {
 
     /** The file system for lookups */
     private FileSystem fileSystem;
@@ -59,13 +59,10 @@ public class LocalLoader extends URL_Loader implements IFileSystemLoader {
             if (location != null) {
                 Path path = fileSystem.getPath(location);
                 if (Files.exists(path)) {
-                    try {
-                        resourceURL = path.toUri().toURL();
-                    } catch (MalformedURLException e) {
-                    }
+                    resourceURL = path.toUri().toURL();
                 }
             }
-        } catch (InvalidPathException e) {
+        } catch (MalformedURLException|InvalidPathException e) {
         }
 
         return resourceURL;
@@ -78,7 +75,7 @@ public class LocalLoader extends URL_Loader implements IFileSystemLoader {
      * @return the loader schema
      */
     @Override
-    public String getURL_Scheme() {
+    public String getUrlScheme() {
         return "file";
     }
 

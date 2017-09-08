@@ -33,7 +33,7 @@ import java.util.stream.IntStream;
  * Base class for the Rezolver tests. Initializes
  * all resources used by the tests.
  */
-public class RezolverBaseTest {
+public class RezolverTestBase {
 
     /** A custom local loader with in-memory filesystem */
     protected LocalLoader localLoader;
@@ -47,7 +47,7 @@ public class RezolverBaseTest {
     /**
      * Initializes default loaders
      */
-    public RezolverBaseTest() {
+    public RezolverTestBase() {
         localLoader = new LocalLoader();
         localLoader.setFileSystem(fileSystem);
     }

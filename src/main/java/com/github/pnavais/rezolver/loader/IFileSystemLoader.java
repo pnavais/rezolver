@@ -22,7 +22,7 @@ import java.nio.file.FileSystem;
  * Common interface for resource loaders working with
  * file custom file systems.
  */
-public interface IFileSystemLoader extends IURL_Loader {
+public interface IFileSystemLoader extends IUrlLoader {
 
     /**
      * Retrieves the path separator
