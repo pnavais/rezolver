@@ -12,7 +12,7 @@
         <img src="https://img.shields.io/coveralls/pnavais/rezolver.svg"
              alt="Coverage"/>
     </a>
-     <a href="LICENSE.txt">
+     <a href="LICENSE">
        <img src="https://img.shields.io/github/license/pnavais/rezolver.svg"
             alt="License"/>
     </a>
