@@ -31,7 +31,21 @@ arbitrary resource specified using a string URL that can be either relative
 or absolute containing optionally a full valid schema.
 </p>
 
-<img src="sample.png"/>
+```Java
+Rezolver.fetch("/home/pnavais/images/image.png");         // --> Resolve from file system
+Rezolver.fetch("file:///home/pnavais/images/image.png");  // --> Same
+Rezolver.fetch("classpath:META-INF/images/image.png");    // --> Resolve from classpath resource
+
+// Resolve a resource URL using a relative path
+ResourceInfo resInfo = Rezolver.fetch("images/inner-image.png");  // --> Search resource locally or in classpath:META-INF/ if not found
+
+resInfo.isResolved();    // --> True
+resInfo.getSearchPath(); // --> images/inner-image.png
+resInfo.getURL();        // --> file:///res/in/classpath/META-INF/images/inner-image.png
+
+// Get URL of resource directly
+URL resURL = Rezolver.lookup("image.png");
+```
 
 In order to retrieve the resolved URL of a given resource, Rezolver will use
 a default chain of loaders performing the following steps :
