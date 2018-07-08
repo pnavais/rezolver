@@ -16,6 +16,9 @@
        <img src="https://img.shields.io/github/license/pnavais/rezolver.svg"
             alt="License"/>
     </a>
+        <a href="https://sonarcloud.io/dashboard/index/org.payball:rezolver">
+        <img src="https://sonarcloud.io/api/project_badges/measure?project=org.payball:rezolver&metric=alert_status"
+             alt="Quality Gate"/>
 </p>
 
 <p align="center"><sup><strong>Simple resource locator for Java 8</strong></sup></p>
