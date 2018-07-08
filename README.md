@@ -19,6 +19,7 @@
         <a href="https://sonarcloud.io/dashboard/index/org.payball:rezolver">
         <img src="https://sonarcloud.io/api/project_badges/measure?project=org.payball:rezolver&metric=alert_status"
              alt="Quality Gate"/>
+    </a>
 </p>
 
 <p align="center"><sup><strong>Simple resource locator for Java 8</strong></sup></p>
