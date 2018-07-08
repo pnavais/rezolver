@@ -14,29 +14,24 @@
  * limitations under the License.
  */
 
-package com.github.pnavais.rezolver.loader;
+package org.payball.rezolver.loader;
 
-import java.nio.file.FileSystem;
-
-/**
- * Common interface for resource loaders working with
- * file custom file systems.
- */
-public interface IFileSystemLoader extends IUrlLoader {
+public interface IUrlLoader {
 
     /**
-     * Retrieves the path separator
+     * Retrieves the URL schema
      *
-     * @return the path separator
+     * @return the URL schema
      */
-    String getPathSeparator();
-
+    String getUrlScheme();
 
     /**
-     * Sets the file system for file resolutions
+     * Removes the URL scheme from a given location
      *
-     * @param fileSystem the file system
+     * @param location the location
+     * @return the location without URL scheme
      */
-    void setFileSystem(FileSystem fileSystem);
-
+    default String stripScheme(String location) {
+        return location.replaceFirst("^"+ getUrlScheme()+":", "");
+    }
 }

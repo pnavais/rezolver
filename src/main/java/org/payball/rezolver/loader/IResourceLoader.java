@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.pnavais.rezolver.loader;
+package org.payball.rezolver.loader;
 
-import com.github.pnavais.rezolver.ResourceInfo;
+import org.payball.rezolver.ResourceInfo;
 
 /**
  * Common interface for all loader implementations.

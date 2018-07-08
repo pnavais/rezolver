@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package com.github.pnavais.rezolver;
+package org.payball.rezolver;
 
-import com.github.pnavais.rezolver.loader.IResourceLoader;
+import org.payball.rezolver.loader.IResourceLoader;
 
 import java.util.ArrayDeque;
 import java.util.Collection;

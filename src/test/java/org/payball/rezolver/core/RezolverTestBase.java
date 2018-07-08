@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.github.pnavais.rezolver;
+package org.payball.rezolver.core;
 
-import com.github.pnavais.rezolver.loader.impl.LocalLoader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.payball.rezolver.loader.impl.LocalLoader;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -36,13 +36,13 @@ import java.util.stream.IntStream;
 public class RezolverTestBase {
 
     /** A custom local loader with in-memory filesystem */
-    protected LocalLoader localLoader;
+    LocalLoader localLoader;
 
     /** The testing in-memory file system */
-    protected static FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
+    static FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
 
     /** The maximum number of test files */
-    protected static int MAX_TEST_FILES = 10;
+    static int MAX_TEST_FILES = 10;
 
     /**
      * Initializes default loaders
@@ -52,7 +52,7 @@ public class RezolverTestBase {
         localLoader.setFileSystem(fileSystem);
     }
 
-    @BeforeClass
+    @BeforeAll
     public static void setup() {
 
         // Create in memory test files
@@ -84,14 +84,14 @@ public class RezolverTestBase {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() {
 
-        Path test_dir = fileSystem.getPath("/tmp/");
+        Path testDir = fileSystem.getPath("/tmp/");
         try {
-            Files.walkFileTree(test_dir, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(testDir, new SimpleFileVisitor<Path>() {
                 @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
                     Files.deleteIfExists(file);
                     return FileVisitResult.CONTINUE;
                 }

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.github.pnavais.rezolver;
+package org.payball.rezolver;
 
 
-import com.github.pnavais.rezolver.loader.IResourceLoader;
-import com.github.pnavais.rezolver.loader.impl.ClasspathLoader;
-import com.github.pnavais.rezolver.loader.impl.FallbackLoader;
-import com.github.pnavais.rezolver.loader.impl.LocalLoader;
-import com.github.pnavais.rezolver.loader.impl.RemoteLoader;
+import org.payball.rezolver.loader.IResourceLoader;
+import org.payball.rezolver.loader.impl.ClasspathLoader;
+import org.payball.rezolver.loader.impl.FallbackLoader;
+import org.payball.rezolver.loader.impl.LocalLoader;
+import org.payball.rezolver.loader.impl.RemoteLoader;
 
 import java.net.URL;
 import java.util.Arrays;

@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.github.pnavais.rezolver;
+package org.payball.rezolver.core;
 
 import org.junit.Test;
+import org.payball.rezolver.ResourceInfo;
+import org.payball.rezolver.Rezolver;
 
 import java.net.URL;
 import java.util.stream.IntStream;
@@ -24,6 +26,9 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+/**
+ * Rezolver Local files tests in parallel
+ */
 public class RezolverParallelTest extends RezolverTestBase {
 
     @Test

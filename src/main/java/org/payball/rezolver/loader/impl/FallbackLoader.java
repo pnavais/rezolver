@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.github.pnavais.rezolver.loader.impl;
+package org.payball.rezolver.loader.impl;
 
-import com.github.pnavais.rezolver.ResourceInfo;
-import com.github.pnavais.rezolver.loader.IFileSystemLoader;
-import com.github.pnavais.rezolver.loader.IResourceLoader;
-import com.github.pnavais.rezolver.loader.IUrlLoader;
+import org.payball.rezolver.ResourceInfo;
+import org.payball.rezolver.loader.IFileSystemLoader;
+import org.payball.rezolver.loader.IResourceLoader;
+import org.payball.rezolver.loader.IUrlLoader;
 
 import static java.util.Objects.requireNonNull;
 

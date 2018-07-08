@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package com.github.pnavais.rezolver;
+package org.payball.rezolver;
 
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import org.payball.rezolver.core.RezolverLocalTest;
 
 /**
  * Rezolver JUnit test suite
  */
-@RunWith(Suite.class)
-@Suite.SuiteClasses({
-        RezolverLocalTest.class,
-        RezolverParallelTest.class
-})
+
+@RunWith(JUnitPlatform.class)
+@SuiteDisplayName("Rezolver tests")
+@SelectClasses( { RezolverLocalTest.class})
 public class RezolverTestSuite {
 }
