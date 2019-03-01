@@ -200,7 +200,7 @@ public class Rezolver
      *  <li>"classpath:/META-INF/resource.xml"</li>
      *  <li>"https://github.com/pnavais/rezolver/"</li>
      *  </ul>
-     *  
+     *
      * @param resourcePath the path to a resource
      * @return the resolved URL or null if not resolved
      */
