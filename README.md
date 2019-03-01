@@ -24,6 +24,27 @@
 
 <p align="center"><sup><strong>Simple resource locator for Java 8</strong></sup></p>
 
+## Maven Repository
+
+You can  pull rezolver from the central maven repository, just add these to your pom.xml file:
+```xml
+<dependency>
+  <groupId>com.github.pnavais</groupId>
+  <artifactId>rezolver</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
+## BUILDING from the sources
+
+As it is maven project, buidling is just a matter of executing the following in your console:
+
+	mvn package
+
+This will produce the rezolver-VERSION.jar file under the target directory.
+
+## Usage
+
 <h2>Resolving the location of a given resource using the default chain of loaders.</h2>
 <p>
 Rezolver will try to do its best to resolve the correct URL of any
