@@ -78,6 +78,7 @@ public class LoadersChain {
      * match found.
      *
      * @param resourcePath the path to the resource to be resolved
+     * @return the resource information
      */
     public ResourceInfo process(String resourcePath) {
         final AtomicReference<ResourceInfo> ref = new AtomicReference<>();
