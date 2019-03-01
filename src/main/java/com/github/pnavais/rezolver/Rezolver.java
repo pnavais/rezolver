@@ -194,14 +194,13 @@ public class Rezolver
      * using the resolver chain.
      *
      * Examples of possible resource paths :
-     * <p>
      * <ul>
      *  <li>"/home/pnavais/myfile.nfo"</li>
      *  <li>"file:///C:/Users/pnavais/test/image.png"</li>
      *  <li>"classpath:/META-INF/resource.xml"</li>
      *  <li>"https://github.com/pnavais/rezolver/"</li>
      *  </ul>
-     * </p>
+     *  
      * @param resourcePath the path to a resource
      * @return the resolved URL or null if not resolved
      */
