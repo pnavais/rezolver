@@ -3,11 +3,34 @@
 
 	<groupId>com.github.pnavais</groupId>
 	<artifactId>rezolver</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>rezolver</name>
+	<description>A simple resource locator for Java 8</description>
 	<url>https://github.com/pnavais/rezolver</url>
+
+	<organization>
+		<url>https://github.com/pnavais/rezolver</url>
+		<name>rezolver</name>
+	</organization>
+	<inceptionYear>2018</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Pablo Navais</name>
+			<email>pnavais@gmail.com</email>
+			<organization>rezolver</organization>
+			<organizationUrl>https://github.com/pnavais/rezolver</organizationUrl>
+		</developer>
+	</developers>
 
 	<scm>
 		<connection>scm:git:git://github.com/pnavais/rezolver.git</connection>
