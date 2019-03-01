@@ -20,7 +20,7 @@
         <img src="https://sonarcloud.io/api/project_badges/measure?project=org.payball:rezolver&metric=alert_status"
              alt="Quality Gate"/>
     </a>
-    <a>
+    <a href="https://maven-badges.herokuapp.com/maven-central/com.github.pnavais/rezolver">
 	<img src="https://maven-badges.herokuapp.com/maven-central/com.github.pnavais/rezolver/badge.svg" 
 	     alt="Maven Central">
     </a>	    
