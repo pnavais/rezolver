@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.payball.rezolver.core;
+package com.github.pnavais.rezolver.core;
 
+import com.github.pnavais.rezolver.ResourceInfo;
+import com.github.pnavais.rezolver.Rezolver;
 import org.junit.Test;
-import org.payball.rezolver.ResourceInfo;
-import org.payball.rezolver.Rezolver;
 
 import java.net.URL;
 import java.util.stream.IntStream;

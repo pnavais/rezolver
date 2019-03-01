@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.payball.rezolver;
+package com.github.pnavais.rezolver;
 
 
-import org.payball.rezolver.loader.IResourceLoader;
-import org.payball.rezolver.loader.impl.ClasspathLoader;
-import org.payball.rezolver.loader.impl.FallbackLoader;
-import org.payball.rezolver.loader.impl.LocalLoader;
-import org.payball.rezolver.loader.impl.RemoteLoader;
+import com.github.pnavais.rezolver.loader.IResourceLoader;
+import com.github.pnavais.rezolver.loader.impl.ClasspathLoader;
+import com.github.pnavais.rezolver.loader.impl.FallbackLoader;
+import com.github.pnavais.rezolver.loader.impl.LocalLoader;
+import com.github.pnavais.rezolver.loader.impl.RemoteLoader;
 
 import java.net.URL;
 import java.util.Arrays;
@@ -65,7 +65,8 @@ public class Rezolver
 
     /** The default loaders chain */
     public static final LoadersChain DEFAULT_CHAIN = LoadersChain.from(Arrays.asList(new LocalLoader(),
-                                                                               FallbackLoader.of(new ClasspathLoader(), "META-INF"),
+                                                                               FallbackLoader
+                                                                                       .of(new ClasspathLoader(), "META-INF"),
                                                                                new RemoteLoader()));
 
     /**

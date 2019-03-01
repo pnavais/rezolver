@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.payball.rezolver.core;
+package com.github.pnavais.rezolver.core;
 
+import com.github.pnavais.rezolver.loader.impl.LocalLoader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
-import org.payball.rezolver.loader.impl.LocalLoader;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

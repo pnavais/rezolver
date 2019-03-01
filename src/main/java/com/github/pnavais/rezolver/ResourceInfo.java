@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.payball.rezolver;
+package com.github.pnavais.rezolver;
 
 import java.net.URL;
 

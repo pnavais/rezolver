@@ -14,29 +14,20 @@
  * limitations under the License.
  */
 
-package org.payball.rezolver.loader;
+package com.github.pnavais.rezolver;
 
-import java.nio.file.FileSystem;
+import org.junit.platform.runner.JUnitPlatform;
+import org.junit.platform.suite.api.SelectClasses;
+import org.junit.platform.suite.api.SuiteDisplayName;
+import org.junit.runner.RunWith;
+import com.github.pnavais.rezolver.core.RezolverLocalTest;
 
 /**
- * Common interface for resource loaders working with
- * file custom file systems.
+ * Rezolver JUnit test suite
  */
-public interface IFileSystemLoader extends IUrlLoader {
 
-    /**
-     * Retrieves the path separator
-     *
-     * @return the path separator
-     */
-    String getPathSeparator();
-
-
-    /**
-     * Sets the file system for file resolutions
-     *
-     * @param fileSystem the file system
-     */
-    void setFileSystem(FileSystem fileSystem);
-
+@RunWith(JUnitPlatform.class)
+@SuiteDisplayName("Rezolver tests")
+@SelectClasses( { RezolverLocalTest.class})
+public class RezolverTestSuite {
 }

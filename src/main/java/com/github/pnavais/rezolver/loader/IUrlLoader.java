@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.payball.rezolver.loader;
+package com.github.pnavais.rezolver.loader;
 
 public interface IUrlLoader {
 

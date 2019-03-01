@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.payball.rezolver.core;
+package com.github.pnavais.rezolver.core;
 
+import com.github.pnavais.rezolver.ResourceInfo;
+import com.github.pnavais.rezolver.Rezolver;
+import com.github.pnavais.rezolver.loader.impl.ClasspathLoader;
+import com.github.pnavais.rezolver.loader.impl.FallbackLoader;
+import com.github.pnavais.rezolver.loader.impl.LocalLoader;
 import org.junit.jupiter.api.Test;
-import org.payball.rezolver.ResourceInfo;
-import org.payball.rezolver.Rezolver;
-import org.payball.rezolver.loader.impl.ClasspathLoader;
-import org.payball.rezolver.loader.impl.FallbackLoader;
-import org.payball.rezolver.loader.impl.LocalLoader;
 
 import java.io.BufferedReader;
 import java.io.IOException;
