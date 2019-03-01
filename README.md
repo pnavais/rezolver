@@ -20,6 +20,10 @@
         <img src="https://sonarcloud.io/api/project_badges/measure?project=org.payball:rezolver&metric=alert_status"
              alt="Quality Gate"/>
     </a>
+    <a>
+	<img src="https://maven-badges.herokuapp.com/maven-central/com.github.pnavais/rezolver/badge.svg" 
+	     alt="Maven Central">
+    </a>	    
 </p>
 
 <p align="center"><sup><strong>Simple resource locator for Java 8</strong></sup></p>
