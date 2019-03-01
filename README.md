@@ -35,7 +35,7 @@ You can  pull rezolver from the central maven repository, just add these to your
 </dependency>
 ```
 
-## BUILDING from the sources
+## Building from the sources
 
 As it is maven project, buidling is just a matter of executing the following in your console:
 
