@@ -61,7 +61,7 @@ import static java.util.Objects.requireNonNull;
 public class Rezolver
 {
     /** The chain of loaders */
-    private LoadersChain loadersChain;
+    protected LoadersChain loadersChain;
 
     /** The default loaders chain */
     public static final LoadersChain DEFAULT_CHAIN = LoadersChain.from(Arrays.asList(new LocalLoader(),
@@ -126,6 +126,18 @@ public class Rezolver
          */
         public RezolverBuilder withDefaults() {
             instance.loadersChain = DEFAULT_CHAIN;
+            return this;
+        }
+
+        /**
+         * Setup the defaults for the rezolver
+         * builder. (e.g. assign the default
+         * resource loader chain)
+         *
+         * @return the rezolver builder instance
+         */
+        public RezolverBuilder withChain(LoadersChain chain) {
+            instance.loadersChain = chain;
             return this;
         }
 

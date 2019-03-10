@@ -21,6 +21,7 @@ import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.runner.RunWith;
 import com.github.pnavais.rezolver.core.RezolverLocalTest;
+import com.github.pnavais.rezolver.core.RezolverParallelTest;
 
 /**
  * Rezolver JUnit test suite
@@ -28,6 +29,6 @@ import com.github.pnavais.rezolver.core.RezolverLocalTest;
 
 @RunWith(JUnitPlatform.class)
 @SuiteDisplayName("Rezolver tests")
-@SelectClasses( { RezolverLocalTest.class})
+@SelectClasses( { RezolverLocalTest.class , RezolverParallelTest.class })
 public class RezolverTestSuite {
 }
