@@ -29,10 +29,13 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.stream.IntStream;
 
+import lombok.extern.java.Log;
+
 /**
  * Base class for the Rezolver tests. Initializes
  * all resources used by the tests.
  */
+@Log
 public class RezolverTestBase {
 
     /** A custom local loader with in-memory filesystem */
@@ -55,18 +58,27 @@ public class RezolverTestBase {
     @BeforeAll
     public static void setup() {
 
-        // Create in memory test files
-        Path tmp = fileSystem.getPath("/tmp/");
-        try {
-            Files.createDirectory(tmp);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        Path tmp = createDirectory("/tmp/");
         IntStream.range(0, MAX_TEST_FILES).parallel().forEach(i -> writeTestFile(tmp, "fs_resource_" + i + ".nfo"));
 
         // Create the duplicate resource
         writeTestFile(tmp, "dup_resource.nfo");
+    }
+
+    /**
+     * Creates a directory in the test file system
+     * @param dir the directory to create
+     * @return the path to the created directory
+     */
+    protected static Path createDirectory(String dir) {
+        // Create in memory test files
+        Path dirPath = fileSystem.getPath(dir);
+        try {
+            Files.createDirectory(dirPath);
+        } catch (IOException e) {
+            log.throwing("RezolverTestBase", "setup", e);
+        }
+        return dirPath;
     }
 
     /**
@@ -75,19 +87,27 @@ public class RezolverTestBase {
      * @param dir      the target directory
      * @param fileName the file to create
      */
-    private static void writeTestFile(Path dir, String fileName) {
+    protected static void writeTestFile(Path dir, String fileName) {
         Path testFile = dir.resolve(fileName);
         try {
             Files.write(testFile, ImmutableList.of("Dummy Data"), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.throwing("RezolverTestBase", "writeTestFile", e);
         }
     }
 
     @AfterAll
     public static void tearDown() {
+        removeDirectory("/tmp/");
+    }
 
-        Path testDir = fileSystem.getPath("/tmp/");
+    /**
+     * Removes the given directory and all its contained
+     * files.
+     * @param dir the directory to remove
+     */
+    protected static void removeDirectory(String dir) {
+        Path testDir = fileSystem.getPath(dir);
         try {
             Files.walkFileTree(testDir, new SimpleFileVisitor<Path>() {
                 @Override
@@ -103,7 +123,7 @@ public class RezolverTestBase {
                 }
             });
         } catch (IOException e) {
-            e.printStackTrace();
+            log.throwing("RezolverTestBase", "tearDown", e);
         }
     }
 

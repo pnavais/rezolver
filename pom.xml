@@ -147,9 +147,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>3.0.1</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-				</configuration>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -216,6 +213,12 @@
 			<artifactId>mockito-core</artifactId>
 			<version>1.10.19</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.6</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 

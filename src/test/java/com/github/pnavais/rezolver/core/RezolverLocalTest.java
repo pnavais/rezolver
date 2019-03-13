@@ -16,8 +16,10 @@
 
 package com.github.pnavais.rezolver.core;
 
+import com.github.pnavais.rezolver.LoadersChain;
 import com.github.pnavais.rezolver.ResourceInfo;
 import com.github.pnavais.rezolver.Rezolver;
+import com.github.pnavais.rezolver.loader.IResourceLoader;
 import com.github.pnavais.rezolver.loader.impl.ClasspathLoader;
 import com.github.pnavais.rezolver.loader.impl.FallbackLoader;
 import com.github.pnavais.rezolver.loader.impl.LocalLoader;
@@ -46,6 +48,7 @@ public class RezolverLocalTest extends RezolverTestBase {
 
 
     private static final String CLASSPATH_META_INF_CL_RESOURCE_NFO = "classpath:META-INF/cl_resource.nfo";
+
     private static final String TMP_DIR = "/tmp/";
 
     @Test
@@ -55,6 +58,39 @@ public class RezolverLocalTest extends RezolverTestBase {
         assertNotNull(dfRes, "Error loading resource from classpath with default chain");
         assertNotNull(bdRes, "Error loading resource from classpath with default builder");
         assertThat(dfRes.toExternalForm(), is(bdRes.toExternalForm()));
+    }
+
+    @Test
+    void customChainBuilderLoadingTest() {
+        URL dfRes = Rezolver.lookup(CLASSPATH_META_INF_CL_RESOURCE_NFO);
+        LoadersChain loadersChain = new LoadersChain();
+        loadersChain.add(FallbackLoader.of(new ClasspathLoader(), "META-INF"));
+        URL bdRes = Rezolver.builder().withChain(loadersChain).build().resolve(CLASSPATH_META_INF_CL_RESOURCE_NFO).getURL();
+        assertNotNull(dfRes, "Error loading resource from classpath with default chain");
+        assertNotNull(bdRes, "Error loading resource from classpath with default builder");
+        assertThat(dfRes.toExternalForm(), is(bdRes.toExternalForm()));
+    }
+
+    @Test
+    void removingLoaderFromChainTest() {
+        URL dfRes = Rezolver.lookup(CLASSPATH_META_INF_CL_RESOURCE_NFO);
+
+        // Create the chain
+        LoadersChain loadersChain = new LoadersChain();
+        IResourceLoader fallbackLoader = FallbackLoader.of(new ClasspathLoader(), "META-INF");
+        loadersChain.add(new ClasspathLoader()).add(fallbackLoader);
+
+        Rezolver r = Rezolver.builder().withChain(loadersChain).build();
+
+        URL bdRes = r.resolve("cl_resource.nfo").getURL();
+        assertNotNull(bdRes, "Error loading resource from classpath with default builder");
+        assertThat(dfRes.toExternalForm(), is(bdRes.toExternalForm()));
+
+        loadersChain.remove(fallbackLoader);
+        ResourceInfo resNotFound = r.resolve("cl_resource.nfo");
+        assertNotNull(resNotFound, "Error retrieving resource info");
+        assertFalse(resNotFound.isResolved(), "The resource shouldn't be loaded");
+        assertNull(resNotFound.getURL(), "The resource url must be null");
     }
 
     @Test

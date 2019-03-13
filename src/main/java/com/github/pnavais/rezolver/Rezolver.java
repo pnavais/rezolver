@@ -65,8 +65,7 @@ public class Rezolver
 
     /** The default loaders chain */
     public static final LoadersChain DEFAULT_CHAIN = LoadersChain.from(Arrays.asList(new LocalLoader(),
-                                                                               FallbackLoader
-                                                                                       .of(new ClasspathLoader(), "META-INF"),
+                                                                               FallbackLoader.of(new ClasspathLoader(), "META-INF"),
                                                                                new RemoteLoader()));
 
     /**
@@ -82,6 +81,8 @@ public class Rezolver
      * This class uses a builder pattern,
      * we keep the constructor private to avoid instantiation
      * from client code.
+     *
+     * @param loadersChain the chain of loaders
      */
     private Rezolver(LoadersChain loadersChain) {
         requireNonNull(loadersChain);
@@ -131,9 +132,9 @@ public class Rezolver
 
         /**
          * Setup the defaults for the rezolver
-         * builder. (e.g. assign the default
-         * resource loader chain)
+         * builder using a custom chain of loaders.
          *
+         * @param chain the loaders chain
          * @return the rezolver builder instance
          */
         public RezolverBuilder withChain(LoadersChain chain) {

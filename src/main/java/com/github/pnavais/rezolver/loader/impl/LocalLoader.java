@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
 public class LocalLoader extends UrlLoader implements IFileSystemLoader {
 
     /** The file system for lookups */
-    private FileSystem fileSystem;
+    protected FileSystem fileSystem;
 
     /**
      * Constructor with default fallback path.
@@ -62,7 +62,7 @@ public class LocalLoader extends UrlLoader implements IFileSystemLoader {
                     resourceURL = path.toUri().toURL();
                 }
             }
-        } catch (MalformedURLException|InvalidPathException e) {
+        } catch (MalformedURLException|InvalidPathException ignored) {
         }
 
         return resourceURL;

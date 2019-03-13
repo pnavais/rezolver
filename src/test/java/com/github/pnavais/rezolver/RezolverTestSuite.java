@@ -16,6 +16,7 @@
 
 package com.github.pnavais.rezolver;
 
+import com.github.pnavais.rezolver.core.RezolverFolderLoaderTest;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SuiteDisplayName;
@@ -29,6 +30,6 @@ import com.github.pnavais.rezolver.core.RezolverParallelTest;
 
 @RunWith(JUnitPlatform.class)
 @SuiteDisplayName("Rezolver tests")
-@SelectClasses( { RezolverLocalTest.class , RezolverParallelTest.class })
+@SelectClasses( { RezolverLocalTest.class , RezolverParallelTest.class, RezolverFolderLoaderTest.class })
 public class RezolverTestSuite {
 }

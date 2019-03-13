@@ -31,7 +31,7 @@ import java.net.URLConnection;
 public class RemoteLoader extends UrlLoader {
 
     /** The proxy */
-    private Proxy proxy = Proxy.NO_PROXY;
+    protected Proxy proxy = Proxy.NO_PROXY;
 
     /**
      * Retrieves the URL from the given resource path

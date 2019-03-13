@@ -16,6 +16,8 @@
 
 package com.github.pnavais.rezolver;
 
+import lombok.ToString;
+
 import java.net.URL;
 
 /**
@@ -23,6 +25,7 @@ import java.net.URL;
  * URL of the resource, the resolution status and any arbitrary data
  * needed during resource resolution.
  */
+@ToString
 public class ResourceInfo {
 
     /** The path that triggered the search */

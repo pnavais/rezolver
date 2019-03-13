@@ -58,8 +58,18 @@ public class LoadersChain {
      *
      * @param loader the loader to add
      */
-    public void add(IResourceLoader loader) {
+    public LoadersChain add(IResourceLoader loader) {
         this.chain.add(loader);
+        return this;
+    }
+
+    /**
+     * Removes a loader from the chain
+     *
+     * @param loader the loader to remove
+     */
+    public void remove(IResourceLoader loader) {
+        this.chain.remove(loader);
     }
 
     /**
@@ -82,10 +92,10 @@ public class LoadersChain {
      */
     public ResourceInfo process(String resourcePath) {
         final AtomicReference<ResourceInfo> ref = new AtomicReference<>();
-        Optional.ofNullable(chain).ifPresent(c -> c.stream().filter(l -> {
+        chain.stream().anyMatch(l -> {
             ref.set(l.resolve(resourcePath));
             return ref.get().isResolved();
-        }).findFirst());
+        });
 
         return ref.get();
     }
