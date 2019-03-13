@@ -35,7 +35,7 @@ You can pull rezolver from the central maven repository, just add these to your 
 <dependency>
   <groupId>com.github.pnavais</groupId>
   <artifactId>rezolver</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
