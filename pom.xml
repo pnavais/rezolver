@@ -3,7 +3,7 @@
 
 	<groupId>com.github.pnavais</groupId>
 	<artifactId>rezolver</artifactId>
-	<version>1.0.3</version>
+	<version>1.0.4-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>rezolver</name>
@@ -36,7 +36,7 @@
 		<connection>scm:git:git://github.com/pnavais/rezolver.git</connection>
 		<developerConnection>scm:git:git@github.com:pnavais/rezolver.git</developerConnection>
 		<url>https://github.com/pnavais/rezolver</url>
-	  <tag>rezolver-1.0.3</tag>
+	  <tag>HEAD</tag>
   </scm>
 
 	<properties>
