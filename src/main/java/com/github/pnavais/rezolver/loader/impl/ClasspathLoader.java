@@ -49,8 +49,14 @@ public class ClasspathLoader extends UrlLoader {
      */
     @Override
     public URL lookup(String resourcePath) {
+        URL resourceURL;
+
         // Check the resource in the same class loader
-        URL resourceURL = classLoader.getResource(resourcePath);
+        try {
+            resourceURL = classLoader.getResource(resourcePath);
+        } catch (Exception e) {
+            resourceURL = null;
+        }
 
         // Fallback to the system class loader
         if (resourceURL == null) {
