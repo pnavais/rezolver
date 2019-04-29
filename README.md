@@ -8,9 +8,8 @@
         <img src="https://img.shields.io/travis/pnavais/rezolver.svg"
              alt="Build Status"/>
     </a>
-    <a href="https://coveralls.io/github/pnavais/rezolver?branch=master">
-        <img src="https://img.shields.io/coveralls/pnavais/rezolver.svg"
-             alt="Coverage"/>
+	<a href='https://coveralls.io/github/pnavais/rezolver?branch=master'>
+	<img src='https://coveralls.io/repos/github/pnavais/rezolver/badge.svg?branch=master' alt='Coverage Status' />
     </a>
      <a href="LICENSE">
        <img src="https://img.shields.io/github/license/pnavais/rezolver.svg"
