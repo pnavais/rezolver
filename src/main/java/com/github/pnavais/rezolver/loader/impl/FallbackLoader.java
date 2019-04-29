@@ -17,9 +17,10 @@
 package com.github.pnavais.rezolver.loader.impl;
 
 import com.github.pnavais.rezolver.ResourceInfo;
-import com.github.pnavais.rezolver.loader.IFileSystemLoader;
 import com.github.pnavais.rezolver.loader.IResourceLoader;
-import com.github.pnavais.rezolver.loader.IUrlLoader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -31,16 +32,10 @@ import static java.util.Objects.requireNonNull;
  *     in case the resolution failed.
  * </p>
  */
-public class FallbackLoader implements IResourceLoader {
+public class FallbackLoader extends AbstractLocationLoader {
 
-    /** The default path separator */
-    public static final String DEFAULT_PATH_SEPARATOR = "/";
-
-    /** The target loader */
-    private final IResourceLoader loader;
-
-    /** The location info to append in case resolution failed */
-    protected String fallbackPath;
+    /** The location alternatives to append in case resolution failed */
+    protected List<String> fallbackPaths;
 
     /**
      * Creates a @{@link FallbackLoader} wrapping
@@ -49,8 +44,8 @@ public class FallbackLoader implements IResourceLoader {
      * @param loader the resource loader to wrap
      */
      public FallbackLoader(IResourceLoader loader) {
-        requireNonNull(loader);
-        this.loader = loader;
+        super(loader);
+        this.fallbackPaths = new ArrayList<>();
     }
 
     /**
@@ -68,57 +63,39 @@ public class FallbackLoader implements IResourceLoader {
         // Resolve it using the base resolution
         resource = this.loader.resolve(location);
 
-        // Last resort, try to resolve it using the fallback path
-        if (!resource.isResolved() && (fallbackPath != null) && (!location.startsWith(fallbackPath))) {
-            resource = this.loader.resolve(applyFallback(location));
+        // Last resort, try to resolve it using the fallback paths
+        for (int i=0; i<fallbackPaths.size() && !resource.isResolved(); i++) {
+            String fallbackPath = fallbackPaths.get(i);
+            if (!location.startsWith(fallbackPath+getSeparator())) {
+                resource = this.loader.resolve(applyRootPath(fallbackPath, location));
+            }
         }
 
         return resource;
     }
 
-    /**
-     * Modify the current location applying the fallback path.
-     * By default, the fallback will be appended to the location
-     * using the path separator.
-     *
-     * @param location location to resolve
-     * @return the location updated with fallback information
-     */
-    protected String applyFallback(String location) {
-        requireNonNull(location);
-
-        String prefix = fallbackPath + getSeparator();
-        String newLocation = location;
-
-        // Rearrange the scheme in case of URL Loaders
-        if (this.loader instanceof IUrlLoader) {
-            newLocation = ((IUrlLoader) this.loader).stripScheme(location);
-            prefix = ((IUrlLoader) this.loader).getUrlScheme() + ":" + prefix;
-        }
-
-        return prefix + newLocation;
-    }
-
-    /**
-     * Retrieves the separator
-     *
-     * @return the separator
-     */
-    protected String getSeparator() {
-        return ((this.loader instanceof IFileSystemLoader)
-                ? ((IFileSystemLoader) this.loader).getPathSeparator()
-                : DEFAULT_PATH_SEPARATOR);
-    }
 
     /**
      * Sets the fallback path to apply to a location as last resort for
      * resource resolution
      *
-     * @param fallbackPath the fallback location
+     * @param fallbackPaths the fallback locations
      */
-    public void setFallbackPath(String fallbackPath) {
+    public void setFallbackPaths(List<String> fallbackPaths) {
+        requireNonNull(fallbackPaths);
+        this.fallbackPaths = fallbackPaths;
+    }
+
+    /**
+     * Adds an additional fallback path to the list.
+     *
+     * @param fallbackPath the fallback path
+     * @return the fallback loader
+     */
+    public FallbackLoader addFallbackPath(String fallbackPath) {
         requireNonNull(fallbackPath);
-        this.fallbackPath= fallbackPath;
+        this.fallbackPaths.add(fallbackPath);
+        return this;
     }
 
     /**
@@ -129,11 +106,31 @@ public class FallbackLoader implements IResourceLoader {
      * @param fallbackPath the fallback path
      * @return the fallback loader of the given resource loader
      */
-    public static FallbackLoader of(IResourceLoader loader, String fallbackPath) {
+    public static FallbackLoader of(IResourceLoader loader, String fallbackPath, String... additionalFallbackPaths) {
         requireNonNull(loader);
         requireNonNull(fallbackPath);
         FallbackLoader fbl = new FallbackLoader(loader);
-        fbl.setFallbackPath(fallbackPath);
+        fbl.addFallbackPath(fallbackPath);
+        for (String additionalFallbackPath : additionalFallbackPaths) {
+            fbl.addFallbackPath(additionalFallbackPath);
+        }
+
+        return fbl;
+    }
+
+    /**
+     * Creates a new fallback loader with the given fallback
+     * path.
+     *
+     * @param loader the resource loader to wrap
+     * @param fallbackPaths the fallback paths
+     * @return the fallback loader of the given resource loader
+     */
+    public static FallbackLoader of(IResourceLoader loader, List<String> fallbackPaths) {
+        requireNonNull(loader);
+        requireNonNull(fallbackPaths);
+        FallbackLoader fbl = new FallbackLoader(loader);
+        fbl.setFallbackPaths(fallbackPaths);
         return fbl;
     }
 

@@ -31,25 +31,23 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Rezolver Local files tests
  */
 public class RezolverLocalTest extends RezolverTestBase {
 
-
     private static final String CLASSPATH_META_INF_CL_RESOURCE_NFO = "classpath:META-INF/cl_resource.nfo";
-
-    private static final String TMP_DIR = "/tmp/";
 
     @Test
     void defaultBuilderLoadingTest() {
@@ -136,6 +134,25 @@ public class RezolverLocalTest extends RezolverTestBase {
     }
 
     @Test
+    void resolveFileWithMultipleCustomFallBackTest() {
+        LocalLoader loader = new LocalLoader();
+        loader.setFileSystem(fileSystem);
+        Rezolver r = Rezolver.builder()
+                .add(new ClasspathLoader())
+                .add(loader, TMP_DIR, "/aux/")
+                .build();
+
+        // Create the auxiliary resource
+        Path tmp = createDirectory("/aux/");
+        writeTestFile(tmp, "aux_resource.nfo");
+
+        resolveTestFile(r, "aux_resource.nfo");
+        resolveTestFiles(r, "fs_resource_", ".nfo");
+
+        removeDirectory("/aux/");
+    }
+
+    @Test
     void resolveFileWithFallBackOrderTest() {
         LocalLoader fileLoader = new LocalLoader();
         fileLoader.setFileSystem(fileSystem);
@@ -151,7 +168,7 @@ public class RezolverLocalTest extends RezolverTestBase {
         assertEquals(ClasspathLoader.class.getSimpleName(), rezInfo.getSourceEntity(), "Resource resolution mismatch");
 
         // Use a fallback path
-        fallbackLoader.setFallbackPath(TMP_DIR);
+        fallbackLoader.addFallbackPath(TMP_DIR);
         ResourceInfo dupRes = r.resolve("dup_resource.nfo");
         assertNotNull(dupRes, "Error resolving the resource");
         assertNotNull(dupRes.getURL(), "Error retrieving the context");
@@ -228,25 +245,33 @@ public class RezolverLocalTest extends RezolverTestBase {
     }
 
     /**
-     * Resolves the test file using the given resolver instance.
+     * Resolves the list of test file using the given resolver instance.
      *
      * @param r the resolver instance
      * @param prefix the prefix of the test file path
      * @param suffix the suffix of the test file path
      */
     private void resolveTestFiles(Rezolver r, String prefix, String suffix) {
-        IntStream.range(0, MAX_TEST_FILES).forEach( i -> {
-            ResourceInfo info = r.resolve(prefix+i+suffix);
-            assertNotNull(info, "Error retrieving resource info");
-            assertTrue(info.isResolved(), "Error resolving resource");
-            assertNotNull(info.getURL(), "Error retrieving resource URL ["+prefix+i+suffix+"] from filesystem");
-            try (InputStream inStream = info.getURL().openStream()) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(inStream));
-                List<String> contents = in.lines().collect(Collectors.toList());
-                assertEquals(contents, Collections.singletonList("Dummy Data"));
-            } catch (IOException e) {
-                fail("Error reading lines from file");
-            }
-        });
+        IntStream.range(0, MAX_TEST_FILES).forEach( i -> resolveTestFile(r, prefix+i+suffix));
+    }
+
+    /**
+     * Resolves the test file using the given resolver instance.
+     *
+     * @param r the resolver instance
+     * @param file the test file path
+     */
+    private void resolveTestFile(Rezolver r, String file) {
+        ResourceInfo info = r.resolve(file);
+        assertNotNull(info, "Error retrieving resource info");
+        assertTrue(info.isResolved(), "Error resolving resource");
+        assertNotNull(info.getURL(), "Error retrieving resource URL ["+file+"] from filesystem");
+        try (InputStream inStream = info.getURL().openStream()) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(inStream));
+            List<String> contents = in.lines().collect(Collectors.toList());
+            assertEquals(contents, Collections.singletonList("Dummy Data"));
+        } catch (IOException e) {
+            fail("Error reading lines from file");
+        }
     }
 }

@@ -17,12 +17,12 @@
 package com.github.pnavais.rezolver;
 
 import com.github.pnavais.rezolver.core.RezolverFolderLoaderTest;
+import com.github.pnavais.rezolver.core.RezolverLocalTest;
+import com.github.pnavais.rezolver.core.RezolverParallelTest;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SuiteDisplayName;
 import org.junit.runner.RunWith;
-import com.github.pnavais.rezolver.core.RezolverLocalTest;
-import com.github.pnavais.rezolver.core.RezolverParallelTest;
 
 /**
  * Rezolver JUnit test suite

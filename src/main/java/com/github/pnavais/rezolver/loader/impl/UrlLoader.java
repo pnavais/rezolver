@@ -17,7 +17,6 @@
 package com.github.pnavais.rezolver.loader.impl;
 
 import com.github.pnavais.rezolver.ResourceInfo;
-import com.github.pnavais.rezolver.loader.IResourceLoader;
 import com.github.pnavais.rezolver.loader.IUrlLoader;
 
 import java.net.URL;
@@ -29,7 +28,7 @@ import java.net.URL;
  *     in case the resolution failed.
  * </p>
  */
-public abstract class UrlLoader implements IUrlLoader, IResourceLoader {
+public abstract class UrlLoader implements IUrlLoader {
 
     /**
      * Use the default loader resolution algorithm and
@@ -40,12 +39,19 @@ public abstract class UrlLoader implements IUrlLoader, IResourceLoader {
      */
     @Override
     public ResourceInfo resolve(String location) {
-        // Try direct resolution
-         URL resourceURL = lookup(location);
 
-        // Try to resolve without schema prefix
-        if ((resourceURL==null) && (location.startsWith(getUrlScheme()))) {
-            resourceURL = lookup(stripScheme(location));
+        URL resourceURL = null;
+
+        String scheme = extractScheme(location);
+        // Check that if a scheme was set, corresponds to the one currently handled
+        if (scheme.isEmpty() || scheme.equals(getUrlScheme())) {
+            // Try direct resolution
+            resourceURL = lookup(location);
+
+            // Try to resolve without schema prefix
+            if ((resourceURL==null) && (location.startsWith(getUrlScheme()))) {
+                resourceURL = lookup(stripScheme(location));
+            }
         }
 
         return ResourceInfo.builder().with(location).as(resourceURL).from(getClass().getSimpleName()).build();

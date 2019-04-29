@@ -16,7 +16,7 @@
 
 package com.github.pnavais.rezolver.loader;
 
-public interface IUrlLoader {
+public interface IUrlLoader extends IResourceLoader {
 
     /**
      * Retrieves the URL schema
@@ -33,5 +33,16 @@ public interface IUrlLoader {
      */
     default String stripScheme(String location) {
         return location.replaceFirst("^"+ getUrlScheme()+":", "");
+    }
+
+    /**
+     * Retrieves the URL scheme used in the location URL if any
+     *
+     * @param location the location
+     * @return the URL scheme used in the location
+     */
+    default String extractScheme(String location) {
+        String scheme = location.replaceAll("^([^:]+):(.*)", "$1");
+        return (scheme.equals(location) ? "" : scheme);
     }
 }

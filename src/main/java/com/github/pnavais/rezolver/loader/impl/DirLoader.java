@@ -17,14 +17,8 @@
 package com.github.pnavais.rezolver.loader.impl;
 
 import com.github.pnavais.rezolver.ResourceInfo;
-import com.github.pnavais.rezolver.loader.IFileSystemLoader;
 import com.github.pnavais.rezolver.loader.IResourceLoader;
-import com.github.pnavais.rezolver.loader.IUrlLoader;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -41,16 +35,10 @@ import static java.util.Objects.requireNonNull;
  *     discarted.
  * </p>
  */
-public class DirLoader implements IResourceLoader {
-
-    /** The default path separator */
-    public static final String DEFAULT_PATH_SEPARATOR = "/";
-
-    /** The target loader */
-    private final IResourceLoader loader;
+public class DirLoader extends AbstractLocationLoader {
 
     /** The location info to append in case resolution failed */
-    protected String rootPath;
+    private String rootPath;
 
     /**
      * Creates a @{@link DirLoader} wrapping
@@ -59,9 +47,8 @@ public class DirLoader implements IResourceLoader {
      * @param loader the resource loader to wrap
      */
      public DirLoader(IResourceLoader loader, String rootPath) {
-         requireNonNull(loader);
+         super(loader);
          requireNonNull(rootPath);
-         this.loader = loader;
          this.rootPath = rootPath;
     }
 
@@ -88,7 +75,7 @@ public class DirLoader implements IResourceLoader {
 
         if (!isAbsolute || hasSameRoot){
             // Resolve with the loader
-            resource = this.loader.resolve(isAbsolute ? location: applyRootPath(location));
+            resource = this.loader.resolve(isAbsolute ? location: applyRootPath(rootPath, location));
             // Check if relative path is inside root path
             if ((!isAbsolute && (resource.isResolved())) &&
                 (!hasSameRoot(getPath(resource.getURL().getPath()).orElse(null)))) {
@@ -130,40 +117,6 @@ public class DirLoader implements IResourceLoader {
         }
 
         return locationPath;
-    }
-
-    /**
-     * Modify the current location applying the fallback path.
-     * By default, the fallback will be appended to the location
-     * using the path separator.
-     *
-     * @param location location to resolve
-     * @return the location updated with fallback information
-     */
-    protected String applyRootPath(String location) {
-        requireNonNull(location);
-
-        String prefix = rootPath + getSeparator();
-        String newLocation = location;
-
-        // Rearrange the scheme in case of URL Loaders
-        if (this.loader instanceof IUrlLoader) {
-            newLocation = ((IUrlLoader) this.loader).stripScheme(location);
-            prefix = ((IUrlLoader) this.loader).getUrlScheme() + ":" + prefix;
-        }
-
-        return prefix + newLocation;
-    }
-
-    /**
-     * Retrieves the separator
-     *
-     * @return the separator
-     */
-    protected String getSeparator() {
-        return ((this.loader instanceof IFileSystemLoader)
-                ? ((IFileSystemLoader) this.loader).getPathSeparator()
-                : DEFAULT_PATH_SEPARATOR);
     }
 
     /**

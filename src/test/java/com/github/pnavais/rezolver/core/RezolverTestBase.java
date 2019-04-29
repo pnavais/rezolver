@@ -20,6 +20,7 @@ import com.github.pnavais.rezolver.loader.impl.LocalLoader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
+import lombok.extern.java.Log;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
@@ -29,14 +30,15 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.stream.IntStream;
 
-import lombok.extern.java.Log;
-
 /**
  * Base class for the Rezolver tests. Initializes
  * all resources used by the tests.
  */
 @Log
 public class RezolverTestBase {
+
+    /** The testing temporal in-memory directory */
+    protected static final String TMP_DIR = "/tmp/";
 
     /** A custom local loader with in-memory filesystem */
     LocalLoader localLoader;
@@ -58,7 +60,7 @@ public class RezolverTestBase {
     @BeforeAll
     public static void setup() {
 
-        Path tmp = createDirectory("/tmp/");
+        Path tmp = createDirectory(TMP_DIR);
         IntStream.range(0, MAX_TEST_FILES).parallel().forEach(i -> writeTestFile(tmp, "fs_resource_" + i + ".nfo"));
 
         // Create the duplicate resource
@@ -98,7 +100,7 @@ public class RezolverTestBase {
 
     @AfterAll
     public static void tearDown() {
-        removeDirectory("/tmp/");
+        removeDirectory(TMP_DIR);
     }
 
     /**

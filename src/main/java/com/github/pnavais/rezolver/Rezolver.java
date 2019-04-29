@@ -162,10 +162,10 @@ public class Rezolver
          * @param fallbackPath the fallback path
          * @return the rezolver builder instance
          */
-        public RezolverBuilder add(IResourceLoader loader, String fallbackPath) {
+        public RezolverBuilder add(IResourceLoader loader, String fallbackPath, String... additionalFallbackPaths) {
             requireNonNull(loader);
             requireNonNull(fallbackPath);
-            instance.loadersChain.add(FallbackLoader.of(loader, fallbackPath));
+            instance.loadersChain.add(FallbackLoader.of(loader, fallbackPath, additionalFallbackPaths));
             return this;
         }
 
