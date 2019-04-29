@@ -18,14 +18,12 @@ package com.github.pnavais.rezolver;
 
 
 import com.github.pnavais.rezolver.loader.IResourceLoader;
-import com.github.pnavais.rezolver.loader.impl.ClasspathLoader;
-import com.github.pnavais.rezolver.loader.impl.FallbackLoader;
-import com.github.pnavais.rezolver.loader.impl.LocalLoader;
-import com.github.pnavais.rezolver.loader.impl.RemoteLoader;
+import com.github.pnavais.rezolver.loader.impl.*;
 
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -66,7 +64,7 @@ public class Rezolver
     /** The default loaders chain */
     public static final LoadersChain DEFAULT_CHAIN = LoadersChain.from(Arrays.asList(new LocalLoader(),
                                                                                FallbackLoader.of(new ClasspathLoader(), "META-INF"),
-                                                                               new RemoteLoader()));
+                                                                               new HttpLoader()));
 
     /**
      * This class uses a builder pattern,
@@ -166,6 +164,21 @@ public class Rezolver
             requireNonNull(loader);
             requireNonNull(fallbackPath);
             instance.loadersChain.add(FallbackLoader.of(loader, fallbackPath, additionalFallbackPaths));
+            return this;
+        }
+
+        /**
+         * Adds the given loader with fallback path
+         * at the end of the chain
+         *
+         * @param loader the loader
+         * @param fallbackPaths the fallback paths
+         * @return the rezolver builder instance
+         */
+        public RezolverBuilder add(IResourceLoader loader, List<String> fallbackPaths) {
+            requireNonNull(loader);
+            requireNonNull(fallbackPaths);
+            instance.loadersChain.add(FallbackLoader.of(loader, fallbackPaths));
             return this;
         }
 

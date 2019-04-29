@@ -18,7 +18,7 @@ package com.github.pnavais.rezolver.core;
 
 import com.github.pnavais.rezolver.ResourceInfo;
 import com.github.pnavais.rezolver.Rezolver;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 import java.util.stream.IntStream;
@@ -42,7 +42,7 @@ public class RezolverParallelTest extends RezolverTestBase {
             assertNotNull("Error processing resource "+rezName, info);
             assertNotNull("Error resolving resource "+rezName, info.getURL());
             URL expectedURL = localLoader.lookup(rezName);
-            assertEquals("URL resolution mismatch", expectedURL, info.getURL());
+            assertEquals("URL resolution mismatch", expectedURL.toExternalForm(), info.getURL().toExternalForm());
             assertNotNull("Error retrieving source entity for resource"+rezName, info.getSourceEntity());
         });
     }

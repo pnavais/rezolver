@@ -153,6 +153,25 @@ public class RezolverLocalTest extends RezolverTestBase {
     }
 
     @Test
+    void resolveFileWithMultipleCustomFallBackListTest() {
+        LocalLoader loader = new LocalLoader();
+        loader.setFileSystem(fileSystem);
+        Rezolver r = Rezolver.builder()
+                .add(new ClasspathLoader())
+                .add(loader, Arrays.asList(TMP_DIR, "/aux/"))
+                .build();
+
+        // Create the auxiliary resource
+        Path tmp = createDirectory("/aux/");
+        writeTestFile(tmp, "aux_resource.nfo");
+
+        resolveTestFile(r, "aux_resource.nfo");
+        resolveTestFiles(r, "fs_resource_", ".nfo");
+
+        removeDirectory("/aux/");
+    }
+
+    @Test
     void resolveFileWithFallBackOrderTest() {
         LocalLoader fileLoader = new LocalLoader();
         fileLoader.setFileSystem(fileSystem);

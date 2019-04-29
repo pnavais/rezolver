@@ -46,11 +46,24 @@ public class DirLoader extends AbstractLocationLoader {
      *
      * @param loader the resource loader to wrap
      */
+    public DirLoader(IResourceLoader loader) {
+        super(loader);
+        this.rootPath = "";
+    }
+
+    /**
+     * Creates a @{@link DirLoader} wrapping
+     * a given resource loader.
+     *
+     * @param loader the resource loader to wrap
+     * @param rootPath the root path
+     */
      public DirLoader(IResourceLoader loader, String rootPath) {
          super(loader);
          requireNonNull(rootPath);
          this.rootPath = rootPath;
     }
+
 
     /**
      * Tries to resolve the file using the supplied loader's

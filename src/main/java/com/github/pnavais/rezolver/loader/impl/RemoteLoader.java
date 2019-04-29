@@ -28,7 +28,7 @@ import java.net.URLConnection;
  *  local or classpath formats.The URL shall contain a valid remote schema (e.g. http, ftp, etc...)
  * </p>
  */
-public class RemoteLoader extends UrlLoader {
+public abstract class RemoteLoader extends UrlLoader {
 
     /** The proxy */
     protected Proxy proxy = Proxy.NO_PROXY;
@@ -66,14 +66,5 @@ public class RemoteLoader extends UrlLoader {
         this.proxy = (proxy != null) ? proxy : Proxy.NO_PROXY;
     }
 
-    /**
-     * Retrieves the URL scheme associated to the loader
-     *
-     * @return the URL scheme
-     */
-    @Override
-    public String getUrlScheme() {
-        return "*";
-    }
 
 }

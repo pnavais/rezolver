@@ -51,9 +51,20 @@ public class RezolverFolderLoaderTest extends RezolverTestBase {
         removeDirectory("/tmp/inner/");
     }
 
+
     @Test
     void localFolderResourceTest() {
         Rezolver r = Rezolver.builder().add(DirLoader.of(localLoader, "/tmp/inner")).build();
+        resolveTestFiles(r, "fs_inner_resource_", ".nfo");
+        r = Rezolver.builder().add(DirLoader.of(localLoader, "/tmp/inner/")).build();
+        resolveTestFiles(r, "fs_inner_resource_", ".nfo");
+    }
+
+    @Test
+    void localFolderResourceSimpleCreationTest() {
+        DirLoader dirLoader = new DirLoader(localLoader);
+        dirLoader.setRootPath("/tmp/inner");
+        Rezolver r = Rezolver.builder().add(dirLoader).build();
         resolveTestFiles(r, "fs_inner_resource_", ".nfo");
         r = Rezolver.builder().add(DirLoader.of(localLoader, "/tmp/inner/")).build();
         resolveTestFiles(r, "fs_inner_resource_", ".nfo");
