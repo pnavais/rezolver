@@ -57,7 +57,7 @@ or absolute containing optionally a full valid schema.
 
 ```Java
 Rezolver.fetch("/home/pnavais/images/image.png");         // --> Resolve from file system
-Rezolver.fetch("file:/home/pnavais/images/image.png");  // --> Same
+Rezolver.fetch("file:/home/pnavais/images/image.png");    // --> Same
 Rezolver.fetch("classpath:META-INF/images/image.png");    // --> Resolve from classpath resource
 
 // Resolve a resource URL using a relative path
