@@ -15,8 +15,8 @@
        <img src="https://img.shields.io/github/license/pnavais/rezolver.svg"
             alt="License"/>
     </a>
-        <a href="https://sonarcloud.io/dashboard/index/org.payball:rezolver">
-        <img src="https://sonarcloud.io/api/project_badges/measure?project=org.payball:rezolver&metric=alert_status"
+        <a href="https://sonarcloud.io/dashboard/index/com.github.pnavais:rezolver">
+        <img src="https://sonarcloud.io/api/project_badges/measure?project=com.github.pnavais:rezolver&metric=alert_status"
              alt="Quality Gate"/>
     </a>
     <a href="https://maven-badges.herokuapp.com/maven-central/com.github.pnavais/rezolver">
