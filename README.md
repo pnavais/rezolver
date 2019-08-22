@@ -20,7 +20,7 @@
              alt="Quality Gate"/>
     </a>
     <a href="https://maven-badges.herokuapp.com/maven-central/com.github.pnavais/rezolver">
-	<img src="https://maven-badges.herokuapp.com/maven-central/com.github.pnavais/rezolver/badge.svg" 
+	<img src="https://img.shields.io/maven-central/v/com.github.pnavais/rezolver" 
 	     alt="Maven Central">
     </a>	    
 </p>
