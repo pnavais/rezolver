@@ -19,6 +19,7 @@ package com.github.pnavais.rezolver.loader.impl;
 import com.github.pnavais.rezolver.ResourceInfo;
 import com.github.pnavais.rezolver.loader.IResourceLoader;
 
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -32,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  *     and use a fixed location as prefix
  *     before resolving a resource location. In case the resource
  *     is located outside the fixed location it will be silently
- *     discarted.
+ *     discarded.
  * </p>
  */
 public class DirLoader extends AbstractLocationLoader {
@@ -86,9 +87,9 @@ public class DirLoader extends AbstractLocationLoader {
         // Check if path belongs to the root path
         boolean hasSameRoot = hasSameRoot(locationPath.orElse(null));
 
-        if (!isAbsolute || hasSameRoot){
+        if (Boolean.FALSE.equals(isAbsolute) || hasSameRoot) {
             // Resolve with the loader
-            resource = this.loader.resolve(isAbsolute ? location: applyRootPath(rootPath, location));
+            resource = this.loader.resolve(Boolean.TRUE.equals(isAbsolute) ? location: applyRootPath(rootPath, location));
             // Check if relative path is inside root path
             if ((!isAbsolute && (resource.isResolved())) &&
                 (!hasSameRoot(getPath(resource.getURL().getPath()).orElse(null)))) {
@@ -122,10 +123,18 @@ public class DirLoader extends AbstractLocationLoader {
      * @return the actual path
      */
     private Optional<Path> getPath(String location) {
-        Optional<Path> locationPath;
+        Optional<Path> locationPath = Optional.empty();
         if (loader instanceof LocalLoader) {
-            locationPath = Optional.of(((LocalLoader)loader).fileSystem.getPath(location).normalize());
-        } else{
+            try {
+                locationPath = Optional.of(((LocalLoader)loader).fileSystem.getPath(location).normalize());
+            } catch (InvalidPathException e) {
+                // Last resort
+                String newLocation = location.replaceFirst("^[\\\\|/]+", "");
+                if (!newLocation.equals(location)) {
+                    return getPath(newLocation);
+                }
+            }
+        } else {
             locationPath = Optional.ofNullable(Paths.get(location).normalize());
         }
 

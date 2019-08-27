@@ -16,6 +16,9 @@
 
 package com.github.pnavais.rezolver.loader;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 public interface IUrlLoader extends IResourceLoader {
 
     /**
@@ -32,7 +35,7 @@ public interface IUrlLoader extends IResourceLoader {
      * @return the location without URL scheme
      */
     default String stripScheme(String location) {
-        return location.replaceFirst("^"+ getUrlScheme()+":", "");
+        return location.replaceFirst("^" + extractScheme(location) + ":", "");
     }
 
     /**
@@ -42,7 +45,17 @@ public interface IUrlLoader extends IResourceLoader {
      * @return the URL scheme used in the location
      */
     default String extractScheme(String location) {
-        String scheme = location.replaceAll("^([^:]+):(.*)", "$1");
-        return (scheme.equals(location) ? "" : scheme);
+        String scheme = "";
+        try {
+            URL schemeURL = new URL(location);
+            scheme = schemeURL.getProtocol();
+        } catch (MalformedURLException e) {
+            // Last resort
+            if (location.contains(":")) {
+                scheme = location.substring(0, location.indexOf(':'));
+            }
+        }
+        return scheme;
     }
+
 }

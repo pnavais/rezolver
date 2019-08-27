@@ -21,7 +21,6 @@ import com.github.pnavais.rezolver.loader.IResourceLoader;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Objects.requireNonNull;
 
@@ -91,13 +90,16 @@ public class LoadersChain {
      * @return the resource information
      */
     public ResourceInfo process(String resourcePath) {
-        final AtomicReference<ResourceInfo> ref = new AtomicReference<>();
-        chain.stream().anyMatch(l -> {
-            ref.set(l.resolve(resourcePath));
-            return ref.get().isResolved();
-        });
+        ResourceInfo resInfo = null;
 
-        return ref.get();
+        for (IResourceLoader loader : chain) {
+            resInfo = loader.resolve(resourcePath);
+            if (resInfo.isResolved()) {
+                break;
+            }
+        }
+
+        return resInfo;
     }
 
     /**

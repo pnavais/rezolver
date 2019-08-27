@@ -23,23 +23,22 @@ import com.github.pnavais.rezolver.loader.IResourceLoader;
 import com.github.pnavais.rezolver.loader.impl.ClasspathLoader;
 import com.github.pnavais.rezolver.loader.impl.FallbackLoader;
 import com.github.pnavais.rezolver.loader.impl.LocalLoader;
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -107,6 +106,8 @@ public class RezolverLocalTest extends RezolverTestBase {
     void fileSystemResourceTest() {
         Rezolver r = Rezolver.builder().add(localLoader).build();
         resolveTestFiles(r, "/tmp/fs_resource_", ".nfo");
+        resolveTestFiles(r,"file:/tmp/fs_resource_", ".nfo");
+        resolveTestFiles(r,"file:///tmp/fs_resource_", ".nfo");
     }
 
     @Test
@@ -263,34 +264,34 @@ public class RezolverLocalTest extends RezolverTestBase {
         assertEquals("Unknown", ctx.getSourceEntity(), "Source entity mismatch");
     }
 
-    /**
-     * Resolves the list of test file using the given resolver instance.
-     *
-     * @param r the resolver instance
-     * @param prefix the prefix of the test file path
-     * @param suffix the suffix of the test file path
-     */
-    private void resolveTestFiles(Rezolver r, String prefix, String suffix) {
-        IntStream.range(0, MAX_TEST_FILES).forEach( i -> resolveTestFile(r, prefix+i+suffix));
+    @Test
+    public void checkWindowsPathFilesTest() {
+        FileSystem winFileSystemFS = Jimfs.newFileSystem(Configuration.windows());
+
+        String tmpDir = "c:\\tmp";
+        Path tmp = winFileSystemFS.getPath(tmpDir);
+
+        try {
+            Files.createDirectory(tmp);
+
+        } catch (IOException e) {
+            fail("Cannot create test directory");
+        }
+
+        writeTestFile(tmp, "TestFile.txt");
+
+        LocalLoader loader = new LocalLoader();
+        loader.setFileSystem(winFileSystemFS);
+        Rezolver r = Rezolver.builder()
+                .add(loader)
+                .build();
+
+        resolveTestFile(r,"c:/tmp/TestFile.txt");
+        resolveTestFile(r,"file:c:/tmp/TestFile.txt");
+        resolveTestFile(r,"file://c:/tmp/TestFile.txt");
+        resolveTestFile(r,"file:///c:/tmp/TestFile.txt");
+
+        removeDirectory(tmpDir);
     }
 
-    /**
-     * Resolves the test file using the given resolver instance.
-     *
-     * @param r the resolver instance
-     * @param file the test file path
-     */
-    private void resolveTestFile(Rezolver r, String file) {
-        ResourceInfo info = r.resolve(file);
-        assertNotNull(info, "Error retrieving resource info");
-        assertTrue(info.isResolved(), "Error resolving resource");
-        assertNotNull(info.getURL(), "Error retrieving resource URL ["+file+"] from filesystem");
-        try (InputStream inStream = info.getURL().openStream()) {
-            BufferedReader in = new BufferedReader(new InputStreamReader(inStream));
-            List<String> contents = in.lines().collect(Collectors.toList());
-            assertEquals(contents, Collections.singletonList("Dummy Data"));
-        } catch (IOException e) {
-            fail("Error reading lines from file");
-        }
-    }
 }

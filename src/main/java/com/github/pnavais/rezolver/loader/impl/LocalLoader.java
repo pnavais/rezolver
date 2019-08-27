@@ -17,6 +17,7 @@
 package com.github.pnavais.rezolver.loader.impl;
 
 import com.github.pnavais.rezolver.loader.IFileSystemLoader;
+import lombok.extern.java.Log;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,6 +34,7 @@ import static java.util.Objects.requireNonNull;
  *  specified resource location string and try to resolve it as last resort.
  * </p>
  */
+@Log
 public class LocalLoader extends UrlLoader implements IFileSystemLoader {
 
     /** The file system for lookups */
@@ -62,10 +64,67 @@ public class LocalLoader extends UrlLoader implements IFileSystemLoader {
                     resourceURL = path.toUri().toURL();
                 }
             }
-        } catch (MalformedURLException|InvalidPathException ignored) {
+        } catch (MalformedURLException|InvalidPathException e) {
+            // Last resort, remove trailing slashes
+            String newLocation = location.replaceFirst("^[\\\\|/]+", "");
+            if (!newLocation.equals(location)) {
+                return lookup(newLocation);
+            }
+            log.throwing(getClass().getSimpleName(), "lookup", e);
         }
 
         return resourceURL;
+    }
+
+    /**
+     * Strips the scheme from the given URL location.
+     * Applies a last fallback location cleanup if
+     * applicable e.g. in Windows the following
+     * URI is valid (file:///c:/file).
+     *
+     * @param location the location
+     * @return the location without scheme
+     */
+    @Override
+    public String stripScheme(String location) {
+        String newLocation;
+        try {
+            URL url = new URL(location);
+            location = url.toExternalForm();
+            String host = url.getHost();
+            String auth = url.getAuthority();
+
+            boolean emptyHost = (host != null) && (host.isEmpty());
+            boolean emptyAuth = (auth != null) && (auth.isEmpty());
+
+            String filter = ((emptyHost && emptyAuth) || (emptyHost && auth == null)) ? ":/*" : "://";
+            String prefix = ((emptyHost && emptyAuth) || (emptyHost && auth == null)) ? url.getFile() : "";
+            newLocation = prefix + location.replaceAll("^" + url.getProtocol() + filter + prefix, "");
+        } catch (MalformedURLException e) {
+            newLocation = location;
+        }
+
+        return newLocation;
+    }
+
+    /**
+     * Extracts the scheme from the given location.
+     * Initially check if the location represents a valid path,
+     * otherwise try to check the URL by calling the base implementation.
+     *
+     * @param location the location
+     * @return the extracted scheme
+     */
+    @Override
+    public String extractScheme(String location) {
+        String scheme = "";
+        try {
+            Path p = Paths.get(location);
+            scheme = p.toUri().toURL().getProtocol();
+        } catch (InvalidPathException | MalformedURLException ipe) {
+            scheme = super.extractScheme(location);
+        }
+        return scheme;
     }
 
     /**

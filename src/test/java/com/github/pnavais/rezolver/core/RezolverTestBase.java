@@ -16,6 +16,8 @@
 
 package com.github.pnavais.rezolver.core;
 
+import com.github.pnavais.rezolver.ResourceInfo;
+import com.github.pnavais.rezolver.Rezolver;
 import com.github.pnavais.rezolver.loader.impl.LocalLoader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.jimfs.Configuration;
@@ -24,11 +26,20 @@ import lombok.extern.java.Log;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Base class for the Rezolver tests. Initializes
@@ -126,6 +137,38 @@ public class RezolverTestBase {
             });
         } catch (IOException e) {
             log.throwing("RezolverTestBase", "tearDown", e);
+        }
+    }
+
+    /**
+     * Resolves the list of test file using the given resolver instance.
+     *
+     * @param r the resolver instance
+     * @param prefix the prefix of the test file path
+     * @param suffix the suffix of the test file path
+     */
+    protected void resolveTestFiles(Rezolver r, String prefix, String suffix) {
+        IntStream.range(0, MAX_TEST_FILES).forEach( i -> resolveTestFile(r, prefix+i+suffix));
+    }
+
+    /**
+     * Resolves the test file using the given resolver instance.
+     *
+     * @param r the resolver instance
+     * @param file the test file path
+     */
+    protected void resolveTestFile(Rezolver r, String file) {
+        ResourceInfo info = r.resolve(file);
+        assertNotNull(info, "Error retrieving resource info");
+        assertTrue(info.isResolved(), "Error resolving resource");
+        assertNotNull(info.toString(), "Error obtaining string representation");
+        assertNotNull(info.getURL(), "Error retrieving resource URL ["+file+"] from filesystem");
+        try (InputStream inStream = info.getURL().openStream()) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(inStream));
+            List<String> contents = in.lines().collect(Collectors.toList());
+            assertEquals(Collections.singletonList("Dummy Data"), contents);
+        } catch (IOException e) {
+            fail("Error reading lines from file");
         }
     }
 

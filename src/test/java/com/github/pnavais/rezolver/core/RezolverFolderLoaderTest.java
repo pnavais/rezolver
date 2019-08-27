@@ -19,21 +19,24 @@ package com.github.pnavais.rezolver.core;
 import com.github.pnavais.rezolver.ResourceInfo;
 import com.github.pnavais.rezolver.Rezolver;
 import com.github.pnavais.rezolver.loader.impl.DirLoader;
+import com.github.pnavais.rezolver.loader.impl.LocalLoader;
+import com.google.common.jimfs.Configuration;
+import com.google.common.jimfs.Jimfs;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Rezolver folder loader tests
@@ -70,6 +73,40 @@ public class RezolverFolderLoaderTest extends RezolverTestBase {
         resolveTestFiles(r, "fs_inner_resource_", ".nfo");
     }
 
+    @Test
+    void localFolderResourceWindowsCreationTest() {
+        FileSystem winFileSystemFS = Jimfs.newFileSystem(Configuration.windows());
+
+        String tmpDir = "c:\\tmp";
+        Path tmp = winFileSystemFS.getPath(tmpDir);
+
+        try {
+            Files.createDirectory(tmp);
+        } catch (IOException e) {
+            fail("Cannot create test directory");
+        }
+
+        writeTestFile(tmp, "TestFile.txt");
+
+        LocalLoader loader = new LocalLoader();
+        loader.setFileSystem(winFileSystemFS);
+
+        URL lookupURL = loader.lookup("c:/tmp/TestFile.txt");
+        assertNotNull("Error retrieving URL", lookupURL);
+        ResourceInfo resourceInfo = loader.resolve("c:/tmp/TestFile.txt");
+        assertNotNull("Error retrieving ResourceInfo", resourceInfo);
+        assertTrue(resourceInfo.isResolved(), "Error resolving resource");
+
+        DirLoader dirLoader = new DirLoader(loader);
+        dirLoader.setRootPath("c:/tmp");
+        Rezolver r = Rezolver.builder()
+                .add(dirLoader)
+                .build();
+
+        resolveTestFile(r, "TestFile.txt");
+        removeDirectory(tmpDir);
+    }
+
    @Test
     void outsideRootFolderResourceTest() {
         Rezolver r = Rezolver.builder().add(DirLoader.of(localLoader, "/tmp/inner")).build();
@@ -90,26 +127,4 @@ public class RezolverFolderLoaderTest extends RezolverTestBase {
         resolveTestFiles(r, "fs_inner_resource_", ".nfo");
     }
 
-    /**
-     * Resolves the test file using the given resolver instance.
-     *
-     * @param r the resolver instance
-     * @param prefix the prefix of the test file path
-     * @param suffix the suffix of the test file path
-     */
-    private void resolveTestFiles(Rezolver r, String prefix, String suffix) {
-        IntStream.range(0, MAX_TEST_FILES).forEach( i -> {
-            ResourceInfo info = r.resolve(prefix+i+suffix);
-            assertNotNull(info, "Error retrieving resource info");
-            assertTrue(info.isResolved(), "Error resolving resource");
-            assertNotNull(info.getURL(), "Error retrieving resource URL ["+prefix+i+suffix+"] from filesystem");
-            try (InputStream inStream = info.getURL().openStream()) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(inStream));
-                List<String> contents = in.lines().collect(Collectors.toList());
-                assertEquals(contents, Collections.singletonList("Dummy Data"));
-            } catch (IOException e) {
-                fail("Error reading lines from file");
-            }
-        });
-    }
 }
