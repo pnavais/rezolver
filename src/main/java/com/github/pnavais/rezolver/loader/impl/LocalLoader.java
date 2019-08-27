@@ -22,6 +22,7 @@ import lombok.extern.java.Log;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.*;
+import java.util.regex.Matcher;
 
 import static java.util.Objects.requireNonNull;
 
@@ -89,6 +90,7 @@ public class LocalLoader extends UrlLoader implements IFileSystemLoader {
     public String stripScheme(String location) {
         String newLocation;
         try {
+            location = normalizePath(location);
             URL url = new URL(location);
             location = url.toExternalForm();
             String host = url.getHost();
@@ -157,6 +159,18 @@ public class LocalLoader extends UrlLoader implements IFileSystemLoader {
     public void setFileSystem(FileSystem fileSystem) {
         requireNonNull(fileSystem);
         this.fileSystem = fileSystem;
+    }
+
+    /**
+     * Fixes possible issues in the path
+     * like backward slashes and missing escapes.
+     *
+     * @param path the path to normalize
+     *
+     * @return the normalized path
+     */
+    private String normalizePath(String path) {
+        return Matcher.quoteReplacement(path.replace("\\", "/"));
     }
 
 }
