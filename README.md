@@ -37,15 +37,6 @@ You can pull rezolver from the central maven repository, just add these to your 
   <version>1.0.5</version>
 </dependency>
 ```
-
-## Building from the sources
-
-As it is a maven project, buidling is just a matter of executing the following in your console:
-
-	mvn package
-
-This will produce the rezolver-VERSION.jar file under the target directory.
-
 ## Usage
 
 <h2>Resolving the location of a given resource using the default chain of loaders.</h2>
